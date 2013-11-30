@@ -1,9 +1,9 @@
-webappmanager
+webapp-launcher
 =============
 
 Summary
 -------
-webOS ports web application management daemon
+webOS ports web application launcher
 
 Description
 -----------
