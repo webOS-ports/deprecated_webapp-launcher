@@ -119,5 +119,10 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    if (!webAppLauncher.initialize()) {
+        qWarning("Failed to initialize application!");
+        return 0;
+    }
+
     return webAppLauncher.exec();
 }

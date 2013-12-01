@@ -54,8 +54,9 @@ public:
     }
     void setParameters(const QString &parameters) { mParameters = parameters; }
 
+    bool initialize();
+
 private slots:
-    void initializeApp();
     void onApplicationWindowClosed();
     void onAboutToQuit();
 
