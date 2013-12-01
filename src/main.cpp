@@ -25,11 +25,11 @@
 int main(int argc, char **argv)
 {
     if (qgetenv("DISPLAY").isEmpty()) {
-        setenv("EGL_PLATFORM", "wayland", 1);
-        setenv("QT_QPA_PLATFORM", "wayland", 1);
-        setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 1);
+        setenv("EGL_PLATFORM", "wayland", 0);
+        setenv("QT_QPA_PLATFORM", "wayland", 0);
         setenv("XDG_RUNTIME_DIR", XDG_RUNTIME_DIR_DEFAULT, 0);
         setenv("QT_IM_MODULE", "Maliit", 0);
+        setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 1);
     }
 
     luna::WebAppLauncher webAppManager(argc, argv);
