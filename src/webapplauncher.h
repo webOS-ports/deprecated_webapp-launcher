@@ -51,6 +51,7 @@ public:
         if (!appDescFile.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
         mAppDesc = QTextStream(&appDescFile).readAll();
+        appDescFile.close();
     }
     void setParameters(const QString &parameters) { mParameters = parameters; }
 

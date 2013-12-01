@@ -57,14 +57,12 @@ bool WebAppLauncher::validateApplication(const ApplicationDescription& desc)
 
 bool WebAppLauncher::initialize()
 {
-    if( mUrl.isEmpty() )
+    if (mUrl.isEmpty())
     {
-        qDebug() << "Calling launchApp(" << mAppDesc << ", " << mParameters << ")";
         mLaunchedApp = launchApp(mAppDesc, mParameters);
     }
     else
     {
-        qDebug() << "Calling launchUrl(" << mUrl << ", " << mWindowType << ", " << mAppDesc << ", " << mParameters << ")";
         mLaunchedApp = launchUrl(mUrl, mWindowType, mAppDesc, mParameters);
     }
 
@@ -119,8 +117,6 @@ void WebAppLauncher::onAboutToQuit()
 void WebAppLauncher::onApplicationWindowClosed()
 {
     WebApplication *app = static_cast<WebApplication*>(sender());
-
-    qDebug() << "Application" << app->id() << "was closed";
     delete app;
 }
 

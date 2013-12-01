@@ -44,8 +44,10 @@ ApplicationDescription::ApplicationDescription(const QString &data) :
 {
     QJsonDocument document = QJsonDocument::fromJson(data.toUtf8());
 
-    if (!document.isObject())
+    if (!document.isObject()) {
+        qWarning() << "Failed to parse application description";
         return;
+    }
 
     QJsonObject rootObject = document.object();
 
