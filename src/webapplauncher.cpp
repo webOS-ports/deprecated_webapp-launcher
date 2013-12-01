@@ -36,8 +36,6 @@ WebAppLauncher::WebAppLauncher(int &argc, char **argv)
 
     QQuickWebViewExperimental::setFlickableViewportEnabled(false);
 
-    QTimer::singleShot(0, this, SLOT(initializeApp()));
-
     connect(this, SIGNAL(aboutToQuit()), this, SLOT(onAboutToQuit()));
 }
 
@@ -57,18 +55,18 @@ bool WebAppLauncher::validateApplication(const ApplicationDescription& desc)
     return true;
 }
 
-void WebAppLauncher::initializeApp()
+bool WebAppLauncher::initialize()
 {
-    if( mUrl.isEmpty() )
+    if (mUrl.isEmpty())
     {
-        qDebug() << "Calling launchApp(" << mAppDesc << ", " << mParameters << ")";
         mLaunchedApp = launchApp(mAppDesc, mParameters);
     }
     else
     {
-        qDebug() << "Calling launchUrl(" << mUrl << ", " << mWindowType << ", " << mAppDesc << ", " << mParameters << ")";
         mLaunchedApp = launchUrl(mUrl, mWindowType, mAppDesc, mParameters);
     }
+
+    return (mLaunchedApp != 0);
 }
 
 WebApplication* WebAppLauncher::launchApp(const QString &appDesc, const QString &parameters)
@@ -119,8 +117,6 @@ void WebAppLauncher::onAboutToQuit()
 void WebAppLauncher::onApplicationWindowClosed()
 {
     WebApplication *app = static_cast<WebApplication*>(sender());
-
-    qDebug() << "Application" << app->id() << "was closed";
     delete app;
 }
 

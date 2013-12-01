@@ -51,11 +51,13 @@ public:
         if (!appDescFile.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
         mAppDesc = QTextStream(&appDescFile).readAll();
+        appDescFile.close();
     }
     void setParameters(const QString &parameters) { mParameters = parameters; }
 
+    bool initialize();
+
 private slots:
-    void initializeApp();
     void onApplicationWindowClosed();
     void onAboutToQuit();
 
