@@ -32,9 +32,9 @@ int main(int argc, char **argv)
         setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 1);
     }
 
-    luna::WebAppLauncher webAppManager(argc, argv);
+    luna::WebAppLauncher webAppLauncher(argc, argv);
 
-    QStringList lArgs = webAppManager.arguments();
+    QStringList lArgs = webAppLauncher.arguments();
 
     if (lArgs.indexOf("--debug") >= 0)
         setenv("QTWEBKIT_INSPECTOR_SERVER", "1122", 0);
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
                 value = option.right(option.size()-10);
             }
             if (!value.isEmpty()) {
-                webAppManager.setAppDesc(value);
+                webAppLauncher.setAppDesc(value);
             }
             else {
                 correctParameters = false;
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
                 value = option.right(option.size()-6);
             }
             if (!value.isEmpty()) {
-                webAppManager.setUrl(value);
+                webAppLauncher.setUrl(value);
             }
             else {
                 correctParameters = false;
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
                 value = option.right(option.size()-6);
             }
             if (!value.isEmpty()) {
-                webAppManager.setParameters(value);
+                webAppLauncher.setParameters(value);
             }
             else {
                 correctParameters = false;
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
                 value = option.right(option.size()-6);
             }
             if (!value.isEmpty()) {
-                webAppManager.setWindowType(value);
+                webAppLauncher.setWindowType(value);
             }
             else {
                 correctParameters = false;
@@ -119,5 +119,5 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    return webAppManager.exec();
+    return webAppLauncher.exec();
 }
