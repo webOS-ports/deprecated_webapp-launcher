@@ -127,8 +127,6 @@ void WebApplicationWindow::createAndSetup()
 
 void WebApplicationWindow::onShowWindowTimeout()
 {
-    qDebug() << __PRETTY_FUNCTION__;
-
     // we got no stage ready call yet so go forward showing the window
     show();
 }
@@ -238,10 +236,8 @@ bool WebApplicationWindow::eventFilter(QObject *object, QEvent *event)
             QTimer::singleShot(0, this, SLOT(onClosed()));
             break;
         case QEvent::FocusIn:
-            //mApplication->changeActivityFocus(true);
             break;
         case QEvent::FocusOut:
-            //mApplication->changeActivityFocus(false);
             break;
         default:
             break;
@@ -253,23 +249,17 @@ bool WebApplicationWindow::eventFilter(QObject *object, QEvent *event)
 
 void WebApplicationWindow::stagePreparing()
 {
-    qDebug() << __PRETTY_FUNCTION__;
-
     mStagePreparing = true;
 }
 
 void WebApplicationWindow::stageReady()
 {
-    qDebug() << __PRETTY_FUNCTION__;
-
     mStagePreparing = false;
     mStageReady = true;
 
     // if the webview is still loading postpone the show call
-    if (mWebView->loading()) {
-        qDebug() << __PRETTY_FUNCTION__ << "Still loading ...";
+    if (mWebView->loading())
         return;
-    }
 
     mShowWindowTimer.stop();
     show();
