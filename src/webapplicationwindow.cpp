@@ -128,7 +128,7 @@ void WebApplicationWindow::createAndSetup()
 void WebApplicationWindow::onShowWindowTimeout()
 {
     // we got no stage ready call yet so go forward showing the window
-    show();
+    stageReady();
 }
 
 void WebApplicationWindow::setupPage()
