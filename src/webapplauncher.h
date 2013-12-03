@@ -37,7 +37,7 @@ class WebAppLauncher : public QGuiApplication
     Q_OBJECT
 
 public:
-    WebAppLauncher(int &argc, char **argv);
+    WebAppLauncher(int& argc, char **argv);
     virtual ~WebAppLauncher();
 
     WebApplication* launchApp(const QString &appDesc, const QString &parameters);
