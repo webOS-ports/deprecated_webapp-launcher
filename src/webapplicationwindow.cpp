@@ -79,7 +79,7 @@ void WebApplicationWindow::createAndSetup()
     mEngine.rootContext()->setContextProperty("webAppUrl", mUrl);
 
     QQmlComponent windowComponent(&mEngine,
-        QUrl(QString("qrc:///qml/%1.qml").arg(mHeadless ? "HeadlessWindow" : "Window")));
+        QUrl(QString("qrc:///qml/%1.qml").arg(mHeadless ? "ApplicationContainer" : "Window")));
     if (windowComponent.isError()) {
         qCritical() << "Errors while loading window component:";
         qCritical() << windowComponent.errors();

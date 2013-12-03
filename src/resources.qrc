@@ -6,7 +6,6 @@
         <file>qml/images/loading-bg.png</file>
         <file>qml/images/loading-glow.png</file>
         <file>qml/images/default-app-icon.png</file>
-        <file>qml/HeadlessWindow.qml</file>
         <file>qml/ApplicationContainer.qml</file>
     </qresource>
 </RCC>
