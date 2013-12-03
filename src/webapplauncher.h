@@ -25,6 +25,7 @@
 #include <QUrl>
 #include <QFile>
 #include <QTextStream>
+#include <QStringList>
 
 namespace luna
 {
@@ -68,6 +69,8 @@ private:
     QString mWindowType;
     QString mAppDesc;
     QString mParameters;
+
+    QStringList mAllowedHeadlessApps;
 
     bool validateApplication(const ApplicationDescription& desc);
 };
