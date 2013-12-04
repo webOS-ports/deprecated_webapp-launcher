@@ -50,14 +50,14 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mLaunchedAtBoot(false),
     mPrivileged(false)
 {
+    if (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm"))
+        mPrivileged = true;
+
     mMainWindow = new WebApplicationWindow(this, url, windowType, mDescription.headless());
     connect(mMainWindow, SIGNAL(closed()), this, SLOT(windowClosed()));
 
     const std::set<std::string> appsToLaunchAtBoot = Settings::LunaSettings()->appsToLaunchAtBoot;
     mLaunchedAtBoot = (appsToLaunchAtBoot.find(id().toStdString()) != appsToLaunchAtBoot.end());
-
-    if (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm"))
-        mPrivileged = true;
 }
 
 WebApplication::~WebApplication()
