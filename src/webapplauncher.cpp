@@ -37,6 +37,13 @@ WebAppLauncher::WebAppLauncher(int &argc, char **argv)
     QQuickWebViewExperimental::setFlickableViewportEnabled(false);
 
     connect(this, SIGNAL(aboutToQuit()), this, SLOT(onAboutToQuit()));
+
+    // We're using a static list here to mark specific applications allowed to run in
+    // headless mode (primary window will be not visible). The list should only contain
+    // legacy applications. All new applications should not use the headless mode anymore
+    // and will refuse to start. There should really no need to extend this list and
+    // therefore it will be kept static forever.
+    mAllowedHeadlessApps << "com.palm.app.email";
 }
 
 WebAppLauncher::~WebAppLauncher()
@@ -50,6 +57,9 @@ bool WebAppLauncher::validateApplication(const ApplicationDescription& desc)
         return false;
 
     if (desc.entryPoint().isLocalFile() && !QFile::exists(desc.entryPoint().toLocalFile()))
+        return false;
+
+    if (desc.headless() && !mAllowedHeadlessApps.contains(desc.id()))
         return false;
 
     return true;

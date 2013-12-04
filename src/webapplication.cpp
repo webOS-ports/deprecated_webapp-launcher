@@ -50,14 +50,14 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mLaunchedAtBoot(false),
     mPrivileged(false)
 {
+    if (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm"))
+        mPrivileged = true;
+
     mMainWindow = new WebApplicationWindow(this, url, windowType, mDescription.headless());
     connect(mMainWindow, SIGNAL(closed()), this, SLOT(windowClosed()));
 
     const std::set<std::string> appsToLaunchAtBoot = Settings::LunaSettings()->appsToLaunchAtBoot;
     mLaunchedAtBoot = (appsToLaunchAtBoot.find(id().toStdString()) != appsToLaunchAtBoot.end());
-
-    if (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm"))
-        mPrivileged = true;
 }
 
 WebApplication::~WebApplication()
@@ -85,6 +85,12 @@ void WebApplication::relaunch(const QString &parameters)
 
 void WebApplication::createWindow(QWebNewPageRequest *request)
 {
+    if (!mDescription.headless()) {
+        qDebug() << __PRETTY_FUNCTION__ << "We're not running in headless mode so refusing to open a new window";
+        request->setWebView(NULL);
+        return;
+    }
+
     qDebug() << __PRETTY_FUNCTION__ << "creating new window for url" << request->url();
 
     // child windows can never be headless ones!

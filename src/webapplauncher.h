@@ -25,6 +25,7 @@
 #include <QUrl>
 #include <QFile>
 #include <QTextStream>
+#include <QStringList>
 
 namespace luna
 {
@@ -37,7 +38,7 @@ class WebAppLauncher : public QGuiApplication
     Q_OBJECT
 
 public:
-    WebAppLauncher(int &argc, char **argv);
+    WebAppLauncher(int& argc, char **argv);
     virtual ~WebAppLauncher();
 
     WebApplication* launchApp(const QString &appDesc, const QString &parameters);
@@ -68,6 +69,8 @@ private:
     QString mWindowType;
     QString mAppDesc;
     QString mParameters;
+
+    QStringList mAllowedHeadlessApps;
 
     bool validateApplication(const ApplicationDescription& desc);
 };
