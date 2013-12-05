@@ -16,7 +16,7 @@
  */
 
 #include <QDebug>
-
+#include <QDir>
 #include <QtWebKit/private/qquickwebview_p.h>
 #include <QTimer>
 
@@ -29,8 +29,7 @@ namespace luna
 
 WebAppLauncher::WebAppLauncher(int &argc, char **argv)
     : QGuiApplication(argc, argv),
-      mLaunchedApp(0),
-      mWindowType("card")
+      mLaunchedApp(0)
 {
     setApplicationName("WebAppLauncher");
 
@@ -65,28 +64,25 @@ bool WebAppLauncher::validateApplication(const ApplicationDescription& desc)
     return true;
 }
 
-bool WebAppLauncher::initialize()
+void WebAppLauncher::launchApp(const QString &manifestPath, const QString &parameters)
 {
-    if (mUrl.isEmpty())
-    {
-        mLaunchedApp = launchApp(mAppDesc, mParameters);
-    }
-    else
-    {
-        mLaunchedApp = launchUrl(mUrl, mWindowType, mAppDesc, mParameters);
+    QFile manifestFile(manifestPath);
+    if (!manifestFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning("Failed to read application manifest %s",
+                 manifestPath.toUtf8().constData());
+        return;
     }
 
-    return (mLaunchedApp != 0);
-}
+    QString manifestData = QTextStream(&manifestFile).readAll();
+    manifestFile.close();
 
-WebApplication* WebAppLauncher::launchApp(const QString &appDesc, const QString &parameters)
-{
-    ApplicationDescription desc(appDesc);
+    QString applicationBasePath = QFileInfo(manifestPath).absoluteDir().path();
+    ApplicationDescription desc(manifestData, applicationBasePath);
 
     if (!validateApplication(desc)) {
         qWarning("Got invalid application description for app %s",
                  desc.id().toUtf8().constData());
-        return 0;
+        return;
     }
 
     QString processId = QString("%0").arg(applicationPid());
@@ -96,25 +92,9 @@ WebApplication* WebAppLauncher::launchApp(const QString &appDesc, const QString 
                                              desc, parameters, processId);
     connect(app, SIGNAL(closed()), this, SLOT(onApplicationWindowClosed()));
 
-    return app;
-}
+    mLaunchedApp = app;
 
-WebApplication* WebAppLauncher::launchUrl(const QUrl &url, const QString &windowType,
-                                         const QString &appDesc, const QString &parameters)
-{
-    ApplicationDescription desc(appDesc);
-
-    if (!validateApplication(desc)) {
-        qWarning("Got invalid application description for app %s",
-                 desc.id().toUtf8().constData());
-        return 0;
-    }
-
-    QString processId = QString("%0").arg(applicationPid());
-    WebApplication *app = new WebApplication(this, url, windowType, desc, parameters, processId);
-    connect(app, SIGNAL(closed()), this, SLOT(onApplicationWindowClosed()));
-
-    return app;
+    this->exec();
 }
 
 void WebAppLauncher::onAboutToQuit()

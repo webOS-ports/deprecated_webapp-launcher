@@ -43,6 +43,7 @@ class WebApplication : public QObject
     Q_PROPERTY(QString parameters READ parameters CONSTANT)
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool privileged READ privileged CONSTANT)
+    Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
 
 public:
     WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
@@ -61,6 +62,7 @@ public:
     QString parameters() const;
     bool headless() const;
     bool privileged() const;
+    QString trustScope() const;
 
     void setActivityId(int activityId);
 

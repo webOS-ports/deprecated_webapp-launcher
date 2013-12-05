@@ -41,22 +41,7 @@ public:
     WebAppLauncher(int& argc, char **argv);
     virtual ~WebAppLauncher();
 
-    WebApplication* launchApp(const QString &appDesc, const QString &parameters);
-    WebApplication* launchUrl(const QUrl &url, const QString &windowType,
-                              const QString &appDesc, const QString &parameters);
-
-    void setUrl(const QString &url) { mUrl = QUrl(url); }
-    void setWindowType(const QString &windowType) { mWindowType = windowType; }
-    void setAppDesc(const QString &appDescFilePath) {
-        QFile appDescFile(appDescFilePath);
-        if (!appDescFile.open(QIODevice::ReadOnly | QIODevice::Text))
-            return;
-        mAppDesc = QTextStream(&appDescFile).readAll();
-        appDescFile.close();
-    }
-    void setParameters(const QString &parameters) { mParameters = parameters; }
-
-    bool initialize();
+    void launchApp(const QString &manifestPath, const QString &parameters);
 
 private slots:
     void onApplicationWindowClosed();
@@ -64,12 +49,6 @@ private slots:
 
 private:
     WebApplication *mLaunchedApp;
-
-    QUrl mUrl;
-    QString mWindowType;
-    QString mAppDesc;
-    QString mParameters;
-
     QStringList mAllowedHeadlessApps;
 
     bool validateApplication(const ApplicationDescription& desc);
