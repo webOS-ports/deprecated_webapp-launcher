@@ -102,6 +102,9 @@ QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
         return QUrl("");
     }
 
+    if (entryPointAsUrl.scheme() == "file")
+        return entryPointAsUrl;
+
     return QUrl(QString("file://%1/%2").arg(mApplicationBasePath).arg(entryPoint));
 }
 
