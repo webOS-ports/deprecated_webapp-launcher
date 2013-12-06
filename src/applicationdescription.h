@@ -33,13 +33,19 @@ class ApplicationDescription : public QObject
     Q_PROPERTY(QUrl icon READ icon CONSTANT)
     Q_PROPERTY(QUrl entryPoint READ entryPoint CONSTANT)
     Q_PROPERTY(bool headless READ headless CONSTANT)
+    Q_ENUMS(TrustScope)
 
 public:
     ApplicationDescription();
     ApplicationDescription(const ApplicationDescription& other);
-    ApplicationDescription(const QString &data);
+    ApplicationDescription(const QString &data, const QString &manifestPath);
     virtual ~ApplicationDescription();
 
+    enum TrustScope {
+        TrustScopeSystem,
+    };
+
+    TrustScope trustScope() const;
     QString id() const;
     QString title() const;
     QUrl icon() const;
@@ -52,6 +58,11 @@ private:
     QUrl mIcon;
     QUrl mEntryPoint;
     bool mHeadless;
+    QString mApplicationBasePath;
+    TrustScope mTrustScope;
+
+    void initializeFromData(const QString &data);
+    QUrl locateEntryPoint(const QString &entryPoint);
 };
 
 } // namespace luna

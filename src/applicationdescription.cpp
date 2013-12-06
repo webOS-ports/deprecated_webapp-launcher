@@ -26,7 +26,8 @@ namespace luna
 {
 
 ApplicationDescription::ApplicationDescription() :
-    mHeadless(false)
+    mHeadless(false),
+    mTrustScope(ApplicationDescription::TrustScopeSystem)
 {
 }
 
@@ -35,12 +36,24 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mTitle(other.title()),
     mIcon(other.icon()),
     mEntryPoint(other.entryPoint()),
-    mHeadless(other.headless())
+    mHeadless(other.headless()),
+    mTrustScope(other.trustScope())
 {
 }
 
-ApplicationDescription::ApplicationDescription(const QString &data) :
-    mHeadless(false)
+ApplicationDescription::ApplicationDescription(const QString &data, const QString &applicationBasePath) :
+    mHeadless(false),
+    mApplicationBasePath(applicationBasePath),
+    mTrustScope(ApplicationDescription::TrustScopeSystem)
+{
+    initializeFromData(data);
+}
+
+ApplicationDescription::~ApplicationDescription()
+{
+}
+
+void ApplicationDescription::initializeFromData(const QString &data)
 {
     QJsonDocument document = QJsonDocument::fromJson(data.toUtf8());
 
@@ -55,7 +68,7 @@ ApplicationDescription::ApplicationDescription(const QString &data) :
         mId = rootObject.value("id").toString();
 
     if (rootObject.contains("main") && rootObject.value("main").isString())
-        mEntryPoint = rootObject.value("main").toString();
+        mEntryPoint = locateEntryPoint(rootObject.value("main").toString());
 
     if (rootObject.contains("noWindow") && rootObject.value("noWindow").isBool())
         mHeadless = rootObject.value("noWindow").toBool();
@@ -78,8 +91,21 @@ ApplicationDescription::ApplicationDescription(const QString &data) :
         mIcon = QUrl("qrc:///qml/images/default-app-icon.png");
 }
 
-ApplicationDescription::~ApplicationDescription()
+QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
 {
+    QUrl entryPointAsUrl(entryPoint);
+
+    if (entryPointAsUrl.scheme() != "file" && entryPointAsUrl.scheme() != "") {
+        qWarning("Entry point %s for application %s is invalid",
+                 entryPoint.toUtf8().constData(),
+                 mId.toUtf8().constData());
+        return QUrl("");
+    }
+
+    if (entryPointAsUrl.scheme() == "file")
+        return entryPointAsUrl;
+
+    return QUrl(QString("file://%1/%2").arg(mApplicationBasePath).arg(entryPoint));
 }
 
 QString ApplicationDescription::id() const
@@ -105,6 +131,11 @@ QUrl ApplicationDescription::entryPoint() const
 bool ApplicationDescription::headless() const
 {
     return mHeadless;
+}
+
+ApplicationDescription::TrustScope ApplicationDescription::trustScope() const
+{
+    return mTrustScope;
 }
 
 }

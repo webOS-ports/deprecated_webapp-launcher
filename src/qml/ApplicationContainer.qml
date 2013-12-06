@@ -20,7 +20,6 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "pluginmanager.js" as PluginManager
 import LunaNext 0.1
-
 Flickable {
     id: webViewContainer
 
@@ -41,16 +40,13 @@ Flickable {
         experimental.preferences.developerExtrasEnabled: true
         experimental.preferences.universalAccessFromFileURLsAllowed: true
         experimental.preferences.fileAccessFromFileURLsAllowed: true
-        experimental.preferences.logsPageMessagesToSystemConsole: true
 
         experimental.preferences.standardFontFamily: "Prelude"
         experimental.preferences.fixedFontFamily: "Courier new"
         experimental.preferences.serifFontFamily: "Times New Roman"
         experimental.preferences.cursiveFontFamily: "Prelude"
 
-        experimental.preferences.privileged: webApp.privileged
-
-        property variant userScripts: [ Qt.resolvedUrl("webos-api.js") ]
+        property variant userScripts: []
         onUserScriptsChanged: {
             // Only inject our user script for the webOS API when we have a patched
             // qtwebkit otherwise it's up to the user to link the app to the required
@@ -66,6 +62,24 @@ Flickable {
                 console.log("WARNING: If you still want to use the webOS API you have to include");
                 console.log("WARNING: the required scripts on your own.");
             }
+        }
+
+        Component.onCompleted: {
+            // Only when we have a system application we enable the webOS API and the
+            // PalmServiceBridge to avoid remote applications accessing unwanted system
+            // internals
+            if (webApp.trustScope === "system") {
+                webView.userScripts = [ Qt.resolvedUrl("webos-api.js") ];
+
+                if (experimental.preferences.hasOwnProperty("palmServiceBridgeEnabled"))
+                    experimental.preferences.palmServiceBridgeEnabled = true;
+
+                if (experimental.preferences.hasOwnProperty("privileged"))
+                    experimental.preferences.privileged = webApp.privileged;
+            }
+
+            if (experimental.preferences.hasOwnProperty("logsPageMessagesToSystemConsole"))
+                experimental.preferences.logsPageMessagesToSystemConsole = true;
         }
 
         experimental.onMessageReceived: {

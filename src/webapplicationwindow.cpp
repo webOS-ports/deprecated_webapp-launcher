@@ -257,10 +257,6 @@ void WebApplicationWindow::stageReady()
     mStagePreparing = false;
     mStageReady = true;
 
-    // if the webview is still loading postpone the show call
-    if (mWebView->loading())
-        return;
-
     mShowWindowTimer.stop();
     show();
 }

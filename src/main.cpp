@@ -34,13 +34,6 @@ static gboolean option_version = FALSE;
 static GOptionEntry options[] = {
     { "appinfo", 'a', 0, G_OPTION_ARG_STRING, &option_appinfo,
         "Application manifest of the application to start" },
-    { "url", 'u', 0, G_OPTION_ARG_STRING, &option_url,
-        "URL of the entrypoint for the application" },
-    { "parameters", 'p', 0, G_OPTION_ARG_STRING, &option_parameters,
-        "Parameters for the application in JSON format" },
-    { "window-type", 'w', 0, G_OPTION_ARG_STRING, &option_window_type,
-        "Window type used for the application window (supported are "
-        "\"card\" and \"launcher\"; will default to \"card\")" },
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &option_debug,
         "Enable debugging modus. This will start the webkit inspector "
         "on http://localhost:1122/" },
@@ -85,21 +78,13 @@ int main(int argc, char **argv)
     }
     if (option_debug)
         setenv("QTWEBKIT_INSPECTOR_SERVER", "11222", 0);
-    if (option_appinfo)
-        webAppLauncher.setAppDesc(QString(option_appinfo));
-    if (option_url)
-        webAppLauncher.setUrl(QString(option_url));
-    if (option_parameters)
-        webAppLauncher.setParameters(QString(option_parameters));
-    if (option_window_type)
-        webAppLauncher.setWindowType(QString(option_window_type));
 
-    if (!webAppLauncher.initialize()) {
-        qWarning("Failed to initialize application!");
+    if (!option_appinfo) {
+        g_warning("No application manifest supplied");
         goto cleanup;
     }
 
-    webAppLauncher.exec();
+    webAppLauncher.launchApp(option_appinfo, option_parameters);
 
 cleanup:
     g_free(option_appinfo);
