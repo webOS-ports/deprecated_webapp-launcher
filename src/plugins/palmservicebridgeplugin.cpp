@@ -92,8 +92,7 @@ bool PalmServiceBridgePlugin::isPrivilegedApplcation(const QString& id)
 {
     return id.startsWith("com.palm.") ||
            id.startsWith("com.webos.") ||
-           id.startsWith("org.webosports.") ||
-           id.startsWith("org.webosinternals.");
+           id.startsWith("org.webosports.");
 }
 
 void PalmServiceBridgePlugin::createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
