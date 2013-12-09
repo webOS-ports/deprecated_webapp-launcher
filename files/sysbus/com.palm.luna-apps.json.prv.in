@@ -1,6 +1,6 @@
 {
     "role": {
-        "exeName":"@WEBOS_INSTALL_LIBDIR@/qt5/libexec/QtWebProcess",
+        "exeName":"@WEBOS_INSTALL_SBINDIR/webapp-launcher",
         "type": "privileged",
         "allowedNames": ["com.palm.luna-*"]
     },

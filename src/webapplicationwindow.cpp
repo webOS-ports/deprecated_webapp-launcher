@@ -34,6 +34,7 @@
 
 #include "plugins/baseplugin.h"
 #include "plugins/palmsystemplugin.h"
+#include "plugins/palmservicebridgeplugin.h"
 
 namespace luna
 {
@@ -215,6 +216,7 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
 void WebApplicationWindow::createPlugins()
 {
     createAndInitializePlugin(new PalmSystemPlugin(this));
+    createAndInitializePlugin(new PalmServiceBridgePlugin(this));
 }
 
 void WebApplicationWindow::createAndInitializePlugin(BasePlugin *plugin)
