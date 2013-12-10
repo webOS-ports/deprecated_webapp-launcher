@@ -21,7 +21,9 @@
 #include <QJsonDocument>
 
 #include <QtWebKit/private/qquickwebview_p.h>
+#ifndef WITH_UNMODIFIED_QTWEBKIT
 #include <QtWebKit/private/qwebnewpagerequest_p.h>
+#endif
 
 #include <set>
 #include <string>
@@ -86,6 +88,8 @@ void WebApplication::relaunch(const QString &parameters)
     mMainWindow->executeScript(QString("_webOS.relaunch(\"%1\");").arg(parameters));
 }
 
+#ifndef WITH_UNMODIFIED_QTWEBKIT
+
 void WebApplication::createWindow(QWebNewPageRequest *request)
 {
     if (!mDescription.headless()) {
@@ -108,6 +112,8 @@ void WebApplication::createWindow(QWebNewPageRequest *request)
 
     mChildWindows.append(window);
 }
+
+#endif
 
 void WebApplication::windowClosed()
 {

@@ -24,7 +24,9 @@
 #include <QTimer>
 
 #include <QtWebKit/private/qquickwebview_p.h>
+#ifndef WITH_UNMODIFIED_QTWEBKIT
 #include <QtWebKit/private/qwebnewpagerequest_p.h>
+#endif
 #include <QtWebKit/private/qwebloadrequest_p.h>
 
 namespace luna
@@ -69,8 +71,10 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private slots:
+#ifndef WITH_UNMODIFIED_QTWEBKIT
     void onCreateNewPage(QWebNewPageRequest *request);
     void onSyncMessageReceived(const QVariantMap& message, QString& response);
+#endif
     void onClosed();
     void onLoadingChanged(QWebLoadRequest *request);
     void onShowWindowTimeout();

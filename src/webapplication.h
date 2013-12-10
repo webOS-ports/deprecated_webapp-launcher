@@ -20,7 +20,9 @@
 
 #include <QQuickView>
 #include <QMap>
+#ifndef WITH_UNMODIFIED_QTWEBKIT
 #include <QtWebKit/private/qwebnewpagerequest_p.h>
+#endif
 
 #include "applicationdescription.h"
 
@@ -68,7 +70,9 @@ public:
 
     void changeActivityFocus(bool focus);
 
+#ifndef WITH_UNMODIFIED_QTWEBKIT
     void createWindow(QWebNewPageRequest *request);
+#endif
 
 signals:
     void closed();
