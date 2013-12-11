@@ -35,6 +35,7 @@ QString BasePlugin::name() const
 
 QString BasePlugin::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
 {
+    return QString("");
 }
 
 void BasePlugin::callback(int id, const QString &parameters)

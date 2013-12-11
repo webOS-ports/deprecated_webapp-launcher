@@ -19,7 +19,9 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 #include <QtWebKit/private/qquickwebview_p.h>
+#ifndef WITH_UNMODIFIED_QTWEBKIT
 #include <QtWebKit/private/qwebnewpagerequest_p.h>
+#endif
 #include <QtGui/QGuiApplication>
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QJsonDocument>
@@ -34,6 +36,7 @@
 
 #include "plugins/baseplugin.h"
 #include "plugins/palmsystemplugin.h"
+#include "plugins/palmservicebridgeplugin.h"
 
 namespace luna
 {
@@ -117,10 +120,12 @@ void WebApplicationWindow::createAndSetup()
     connect(mWebView, SIGNAL(loadingChanged(QWebLoadRequest*)),
             this, SLOT(onLoadingChanged(QWebLoadRequest*)));
 
+#ifndef WITH_UNMODIFIED_QTWEBKIT
     connect(mWebView->experimental(), SIGNAL(createNewPage(QWebNewPageRequest*)),
             this, SLOT(onCreateNewPage(QWebNewPageRequest*)));
     connect(mWebView->experimental(), SIGNAL(syncMessageReceived(const QVariantMap&, QString&)),
             this, SLOT(onSyncMessageReceived(const QVariantMap&, QString&)));
+#endif
 
     createPlugins();
 }
@@ -169,6 +174,8 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
         show();
 }
 
+#ifndef WITH_UNMODIFIED_QTWEBKIT
+
 void WebApplicationWindow::onCreateNewPage(QWebNewPageRequest *request)
 {
     mApplication->createWindow(request);
@@ -212,9 +219,12 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
     response = plugin->handleSynchronousCall(funcName, params);
 }
 
+#endif
+
 void WebApplicationWindow::createPlugins()
 {
     createAndInitializePlugin(new PalmSystemPlugin(this));
+    createAndInitializePlugin(new PalmServiceBridgePlugin(this));
 }
 
 void WebApplicationWindow::createAndInitializePlugin(BasePlugin *plugin)
