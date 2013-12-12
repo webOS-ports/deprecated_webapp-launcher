@@ -18,8 +18,8 @@
 #include <QDebug>
 #include <QtGlobal>
 
-#include "webapplication.h"
-#include "webapplicationwindow.h"
+#include "../webapplication.h"
+#include "../webapplicationwindow.h"
 #include "palmservicebridgeplugin.h"
 
 namespace luna
@@ -84,7 +84,8 @@ void PalmServiceBridge::cancel(int successCallbackId, int errorCallbackId)
 }
 
 PalmServiceBridgePlugin::PalmServiceBridgePlugin(WebApplicationWindow *applicationWindow, QObject *parent) :
-    BasePlugin("PalmServiceBridge", applicationWindow, parent)
+    WebAppBasePlugin("PalmServiceBridge", applicationWindow, parent),
+    mApplicationWindow(applicationWindow)
 {
 }
 

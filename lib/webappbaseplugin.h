@@ -25,15 +25,15 @@
 namespace luna
 {
 
-class WebApplicationWindow;
+class ScriptExecutor;
 
-class BasePlugin : public QObject
+class WebAppBasePlugin : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name)
 
 public:
-    explicit BasePlugin(const QString &name, WebApplicationWindow *applicationWindow, QObject *parent = 0);
+    explicit WebAppBasePlugin(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent = 0);
 
     QString name() const;
 
@@ -44,7 +44,7 @@ protected:
     void callback(int id, const QString &parameters);
 
 protected:
-    WebApplicationWindow *mApplicationWindow;
+    ScriptExecutor *mExecutor;
 
 private:
     QString mName;

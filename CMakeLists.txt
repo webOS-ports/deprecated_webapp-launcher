@@ -9,7 +9,7 @@ webos_component(0 1 0)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x")
 
 find_package(Qt5Gui REQUIRED)
 if(NOT Qt5Gui_FOUND)
@@ -44,4 +44,8 @@ if(WITH_UNMODIFIED_QTWEBKIT)
     add_definitions(-DWITH_UNMODIFIED_QTWEBKIT)
 endif()
 
+add_subdirectory(lib)
+include_directories(lib)
 add_subdirectory(src)
+
+webos_build_configured_file(files/pkgconfig/webapp-plugin.pc PKGCONFIGDIR "")

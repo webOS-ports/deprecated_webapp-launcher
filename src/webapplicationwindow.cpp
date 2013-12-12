@@ -34,7 +34,6 @@
 #include "webapplication.h"
 #include "webapplicationwindow.h"
 
-#include "plugins/baseplugin.h"
 #include "plugins/palmsystemplugin.h"
 #include "plugins/palmservicebridgeplugin.h"
 
@@ -43,7 +42,7 @@ namespace luna
 
 WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
                                            bool headless, QObject *parent) :
-    QObject(parent),
+    ScriptExecutor(parent),
     mApplication(application),
     mEngine(this),
     mRootItem(0),
@@ -215,7 +214,7 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
     if (!mPlugins.contains(pluginName))
         return;
 
-    BasePlugin *plugin = mPlugins.value(pluginName);
+    WebAppBasePlugin *plugin = mPlugins.value(pluginName);
     response = plugin->handleSynchronousCall(funcName, params);
 }
 
@@ -227,7 +226,7 @@ void WebApplicationWindow::createPlugins()
     createAndInitializePlugin(new PalmServiceBridgePlugin(this));
 }
 
-void WebApplicationWindow::createAndInitializePlugin(BasePlugin *plugin)
+void WebApplicationWindow::createAndInitializePlugin(WebAppBasePlugin *plugin)
 {
     mPlugins.insert(plugin->name(), plugin);
     emit pluginWantsToBeAdded(plugin->name(), plugin);

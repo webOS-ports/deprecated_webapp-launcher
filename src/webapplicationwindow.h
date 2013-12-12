@@ -29,13 +29,15 @@
 #endif
 #include <QtWebKit/private/qwebloadrequest_p.h>
 
+#include <scriptexecutor.h>
+
 namespace luna
 {
 
-class BasePlugin;
+class WebAppBasePlugin;
 class WebApplication;
 
-class WebApplicationWindow : public QObject
+class WebApplicationWindow : public ScriptExecutor
 {
     Q_OBJECT
     Q_PROPERTY(WebApplication *application READ application)
@@ -59,7 +61,6 @@ public:
 
     void setKeepAlive(bool alive);
 
-public slots:
     void executeScript(const QString &script);
 
 signals:
@@ -81,7 +82,7 @@ private slots:
 
 private:
     WebApplication *mApplication;
-    QMap<QString, BasePlugin*> mPlugins;
+    QMap<QString, WebAppBasePlugin*> mPlugins;
     QQmlEngine mEngine;
     QObject *mRootItem;
     QQuickWindow *mWindow;
@@ -96,7 +97,7 @@ private:
 
     void createAndSetup();
     void createPlugins();
-    void createAndInitializePlugin(BasePlugin *plugin);
+    void createAndInitializePlugin(WebAppBasePlugin *plugin);
     void setWindowProperty(const QString &name, const QVariant &value);
     void setupPage();
 };

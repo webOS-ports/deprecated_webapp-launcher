@@ -14,7 +14,6 @@ set(SOURCES
     webapplicationwindow.cpp
     applicationdescription.cpp
     plugins/lunaservicemgr.cpp
-    plugins/baseplugin.cpp
     plugins/palmservicebridgeplugin.cpp
     plugins/palmsystemplugin.cpp)
 
@@ -25,7 +24,6 @@ set(HEADERS
     webapplicationwindow.h
     applicationdescription.h
     plugins/lunaservicemgr.h
-    plugins/baseplugin.h
     plugins/palmservicebridgeplugin.h
     plugins/palmsystemplugin.h)
 
@@ -38,6 +36,7 @@ install (FILES ${WEBOS_FRAMEWORK} DESTINATION ${WEBOS_INSTALL_WEBOS_FRAMEWORKSDI
 add_executable(webapp-launcher ${SOURCES} ${HEADERS} ${RESOURCES})
 qt5_use_modules(webapp-launcher Quick Gui WebKit)
 target_link_libraries(webapp-launcher
+    webapp-plugin
     ${LS2_LIBRARIES}
     ${GLIB2_LIBRARIES}
     ${SYSTEMD_DAEMON_LIBRARIES}

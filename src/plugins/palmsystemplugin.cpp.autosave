@@ -22,14 +22,14 @@
 #include <QFile>
 
 #include "../webapplication.h"
-#include "../webapplicationwindow.h"
+#include "../   vwebapplicationwindow.h"
 #include "palmsystemplugin.h"
 
 namespace luna
 {
 
 PalmSystemPlugin::PalmSystemPlugin(WebApplicationWindow *applicationWindow, QObject *parent) :
-    WebAppBasePlugin("PalmSystem", applicationWindow, parent),
+    BasePlugin("PalmSystem", applicationWindow, parent),
     mPropertyChangeHandlerCallbackId(0),
     mApplicationWindow(applicationWindow)
 {

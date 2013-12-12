@@ -18,14 +18,14 @@
 #ifndef PALMSYSTEMPLUGIN_H
 #define PALMSYSTEMPLUGIN_H
 
-#include "baseplugin.h"
+#include <webappbaseplugin.h>
 
 namespace luna
 {
 
-class WebApplication;
+class WebApplicationWindow;
 
-class PalmSystemPlugin : public BasePlugin
+class PalmSystemPlugin : public WebAppBasePlugin
 {
     Q_OBJECT
 public:
@@ -108,6 +108,7 @@ public slots:
 
 private:
     int mPropertyChangeHandlerCallbackId;
+    WebApplicationWindow *mApplicationWindow;
 
     QString getResource(const QJsonArray& params);
 };

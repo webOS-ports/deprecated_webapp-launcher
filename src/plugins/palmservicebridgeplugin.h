@@ -21,11 +21,14 @@
 #include <QObject>
 #include <QMap>
 
-#include "baseplugin.h"
+#include <webappbaseplugin.h>
+
 #include "lunaservicemgr.h"
 
 namespace luna
 {
+
+class WebApplicationWindow;
 
 class PalmServiceBridge : public QObject,
                           public LunaServiceManagerListener
@@ -51,7 +54,7 @@ private:
     bool mCallActive;
 };
 
-class PalmServiceBridgePlugin : public BasePlugin
+class PalmServiceBridgePlugin : public WebAppBasePlugin
 {
     Q_OBJECT
 public:
@@ -68,6 +71,7 @@ private slots:
 
 private:
     QMap<unsigned int, PalmServiceBridge*> mBridgeInstances;
+    WebApplicationWindow *mApplicationWindow;
 
     bool isPrivilegedApplcation(const QString& id);
 };
