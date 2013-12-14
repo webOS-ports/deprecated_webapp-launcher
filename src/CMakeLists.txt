@@ -13,9 +13,9 @@ set(SOURCES
     webapplication.cpp
     webapplicationwindow.cpp
     applicationdescription.cpp
-    plugins/lunaservicemgr.cpp
-    plugins/palmservicebridgeplugin.cpp
-    plugins/palmsystemplugin.cpp)
+    extensions/lunaservicemgr.cpp
+    extensions/palmservicebridgeextension.cpp
+    extensions/palmsystemextension.cpp)
 
 set(HEADERS
     utils.h
@@ -23,9 +23,9 @@ set(HEADERS
     webapplication.h
     webapplicationwindow.h
     applicationdescription.h
-    plugins/lunaservicemgr.h
-    plugins/palmservicebridgeplugin.h
-    plugins/palmsystemplugin.h)
+    extensions/lunaservicemgr.h
+    extensions/palmservicebridgeextension.h
+    extensions/palmsystemextension.h)
 
 qt5_add_resources(RESOURCES resources.qrc)
 

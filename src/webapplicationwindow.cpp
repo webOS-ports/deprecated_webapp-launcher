@@ -34,8 +34,8 @@
 #include "webapplication.h"
 #include "webapplicationwindow.h"
 
-#include "plugins/palmsystemplugin.h"
-#include "plugins/palmservicebridgeplugin.h"
+#include "extensions/palmsystemextension.h"
+#include "extensions/palmservicebridgeextension.h"
 
 namespace luna
 {
@@ -126,7 +126,7 @@ void WebApplicationWindow::createAndSetup()
             this, SLOT(onSyncMessageReceived(const QVariantMap&, QString&)));
 #endif
 
-    createPlugins();
+    createDefaultExtensions();
 }
 
 void WebApplicationWindow::onShowWindowTimeout()
@@ -199,37 +199,37 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
         return;
 
     messageType = rootObject.value("messageType").toString();
-    if (messageType != "callSyncPluginFunction")
+    if (messageType != "callSyncExtensionFunction")
         return;
 
-    if (!(rootObject.contains("plugin") && rootObject.value("plugin").isString()) ||
+    if (!(rootObject.contains("extension") && rootObject.value("extension").isString()) ||
         !(rootObject.contains("func") && rootObject.value("func").isString()) ||
         !(rootObject.contains("params") && rootObject.value("params").isArray()))
         return;
 
-    QString pluginName = rootObject.value("plugin").toString();
+    QString extensionName = rootObject.value("extension").toString();
     QString funcName = rootObject.value("func").toString();
     QJsonArray params = rootObject.value("params").toArray();
 
-    if (!mPlugins.contains(pluginName))
+    if (!mExtensions.contains(extensionName))
         return;
 
-    WebAppBasePlugin *plugin = mPlugins.value(pluginName);
-    response = plugin->handleSynchronousCall(funcName, params);
+    BaseExtension *extension = mExtensions.value(extensionName);
+    response = extension->handleSynchronousCall(funcName, params);
 }
 
 #endif
 
-void WebApplicationWindow::createPlugins()
+void WebApplicationWindow::createDefaultExtensions()
 {
-    createAndInitializePlugin(new PalmSystemPlugin(this));
-    createAndInitializePlugin(new PalmServiceBridgePlugin(this));
+    createAndInitializeExtension(new PalmSystemExtension(this));
+    createAndInitializeExtension(new PalmServiceBridgeExtension(this));
 }
 
-void WebApplicationWindow::createAndInitializePlugin(WebAppBasePlugin *plugin)
+void WebApplicationWindow::createAndInitializeExtension(BaseExtension *extension)
 {
-    mPlugins.insert(plugin->name(), plugin);
-    emit pluginWantsToBeAdded(plugin->name(), plugin);
+    mExtensions.insert(extension->name(), extension);
+    emit extensionWantsToBeAdded(extension->name(), extension);
 }
 
 void WebApplicationWindow::onClosed()

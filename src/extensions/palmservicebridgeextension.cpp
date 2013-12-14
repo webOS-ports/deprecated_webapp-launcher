@@ -20,7 +20,7 @@
 
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
-#include "palmservicebridgeplugin.h"
+#include "palmservicebridgeextension.h"
 
 namespace luna
 {
@@ -83,20 +83,20 @@ void PalmServiceBridge::cancel(int successCallbackId, int errorCallbackId)
     mCallActive = false;
 }
 
-PalmServiceBridgePlugin::PalmServiceBridgePlugin(WebApplicationWindow *applicationWindow, QObject *parent) :
-    WebAppBasePlugin("PalmServiceBridge", applicationWindow, parent),
+PalmServiceBridgeExtension::PalmServiceBridgeExtension(WebApplicationWindow *applicationWindow, QObject *parent) :
+    BaseExtension("PalmServiceBridge", applicationWindow, parent),
     mApplicationWindow(applicationWindow)
 {
 }
 
-bool PalmServiceBridgePlugin::isPrivilegedApplcation(const QString& id)
+bool PalmServiceBridgeExtension::isPrivilegedApplcation(const QString& id)
 {
     return id.startsWith("com.palm.") ||
            id.startsWith("com.webos.") ||
            id.startsWith("org.webosports.");
 }
 
-void PalmServiceBridgePlugin::createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
 {
     if (mBridgeInstances.contains(instanceId)) {
         callback(errorCallbackId, "Can't create another instance with an already existing id");
@@ -109,7 +109,7 @@ void PalmServiceBridgePlugin::createInstance(int successCallbackId, int errorCal
     mBridgeInstances.insert(instanceId, bridge);
 }
 
-void PalmServiceBridgePlugin::releaseInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::releaseInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
 {
     Q_UNUSED(successCallbackId);
     Q_UNUSED(errorCallbackId);
@@ -121,12 +121,12 @@ void PalmServiceBridgePlugin::releaseInstance(int successCallbackId, int errorCa
     bridge->deleteLater();
 }
 
-void PalmServiceBridgePlugin::callbackFromBridge(int id, const QString &arguments)
+void PalmServiceBridgeExtension::callbackFromBridge(int id, const QString &arguments)
 {
     callback(id, arguments);
 }
 
-void PalmServiceBridgePlugin::call(int successCallbackId, int errorCallbackId, unsigned int instanceId,
+void PalmServiceBridgeExtension::call(int successCallbackId, int errorCallbackId, unsigned int instanceId,
                                    const QString& uri, const QString& payload)
 {
     if (!mBridgeInstances.contains(instanceId))
@@ -136,7 +136,7 @@ void PalmServiceBridgePlugin::call(int successCallbackId, int errorCallbackId, u
     bridge->call(successCallbackId, errorCallbackId, uri, payload);
 }
 
-void PalmServiceBridgePlugin::cancel(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::cancel(int successCallbackId, int errorCallbackId, unsigned int instanceId)
 {
     if (!mBridgeInstances.contains(instanceId))
         return;

@@ -15,29 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "webappbaseplugin.h"
+#include "baseextension.h"
 #include "scriptexecutor.h"
 
 using namespace luna;
 
-WebAppBasePlugin::WebAppBasePlugin(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent) :
+BaseExtension::BaseExtension(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent) :
     QObject(parent),
     mExecutor(scriptExecutor),
     mName(name)
 {
 }
 
-QString WebAppBasePlugin::name() const
+QString BaseExtension::name() const
 {
     return mName;
 }
 
-QString WebAppBasePlugin::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
+QString BaseExtension::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
 {
     return QString("");
 }
 
-void WebAppBasePlugin::callback(int id, const QString &parameters)
+void BaseExtension::callback(int id, const QString &parameters)
 {
     QString script;
 
@@ -51,7 +51,7 @@ void WebAppBasePlugin::callback(int id, const QString &parameters)
     mExecutor->executeScript(script);
 }
 
-void WebAppBasePlugin::callbackWithoutRemove(int id, const QString &parameters)
+void BaseExtension::callbackWithoutRemove(int id, const QString &parameters)
 {
     QString script;
 

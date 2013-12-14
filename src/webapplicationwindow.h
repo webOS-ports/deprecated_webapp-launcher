@@ -34,7 +34,7 @@
 namespace luna
 {
 
-class WebAppBasePlugin;
+class BaseExtension;
 class WebApplication;
 
 class WebApplicationWindow : public ScriptExecutor
@@ -65,7 +65,7 @@ public:
 
 signals:
     void javaScriptExecNeeded(const QString &script);
-    void pluginWantsToBeAdded(const QString &name, QObject *object);
+    void extensionWantsToBeAdded(const QString &name, QObject *object);
     void closed();
 
 protected:
@@ -82,7 +82,7 @@ private slots:
 
 private:
     WebApplication *mApplication;
-    QMap<QString, WebAppBasePlugin*> mPlugins;
+    QMap<QString, BaseExtension*> mExtensions;
     QQmlEngine mEngine;
     QObject *mRootItem;
     QQuickWindow *mWindow;
@@ -96,8 +96,8 @@ private:
     QTimer mShowWindowTimer;
 
     void createAndSetup();
-    void createPlugins();
-    void createAndInitializePlugin(WebAppBasePlugin *plugin);
+    void createDefaultExtensions();
+    void createAndInitializeExtension(BaseExtension *plugin);
     void setWindowProperty(const QString &name, const QVariant &value);
     void setupPage();
 };

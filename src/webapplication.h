@@ -30,7 +30,7 @@ namespace luna
 {
 
 class WebAppLauncher;
-class WebAppBasePlugin;
+class BaseExtension;
 class WebApplicationWindow;
 
 class WebApplication : public QObject

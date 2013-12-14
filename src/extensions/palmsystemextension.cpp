@@ -23,90 +23,90 @@
 
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
-#include "palmsystemplugin.h"
+#include "palmsystemextension.h"
 
 namespace luna
 {
 
-PalmSystemPlugin::PalmSystemPlugin(WebApplicationWindow *applicationWindow, QObject *parent) :
-    WebAppBasePlugin("PalmSystem", applicationWindow, parent),
+PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow, QObject *parent) :
+    BaseExtension("PalmSystem", applicationWindow, parent),
     mPropertyChangeHandlerCallbackId(0),
     mApplicationWindow(applicationWindow)
 {
 }
 
-void PalmSystemPlugin::stageReady()
+void PalmSystemExtension::stageReady()
 {
     mApplicationWindow->stageReady();
 }
 
-void PalmSystemPlugin::activate()
+void PalmSystemExtension::activate()
 {
 }
 
-void PalmSystemPlugin::deactivate()
+void PalmSystemExtension::deactivate()
 {
 }
 
-void PalmSystemPlugin::stagePreparing()
+void PalmSystemExtension::stagePreparing()
 {
     mApplicationWindow->stagePreparing();
 }
 
-void PalmSystemPlugin::show()
+void PalmSystemExtension::show()
 {
     mApplicationWindow->show();
 }
 
-void PalmSystemPlugin::hide()
+void PalmSystemExtension::hide()
 {
     mApplicationWindow->hide();
 }
 
-void PalmSystemPlugin::setWindowProperties(const QString &properties)
+void PalmSystemExtension::setWindowProperties(const QString &properties)
 {
 }
 
-void PalmSystemPlugin::enableFullScreenMode(bool enable)
+void PalmSystemExtension::enableFullScreenMode(bool enable)
 {
 }
 
-void PalmSystemPlugin::addBannerMessage(int id, const QString &msg,
+void PalmSystemExtension::addBannerMessage(int id, const QString &msg,
                                         const QString &params, const QString &icon, const QString &soundClass,
                                         const QString &soundFile, int duration, bool doNotSuppress)
 {
 }
 
-void PalmSystemPlugin::removeBannerMessage(int id)
+void PalmSystemExtension::removeBannerMessage(int id)
 {
 }
 
-void PalmSystemPlugin::clearBannerMessages()
+void PalmSystemExtension::clearBannerMessages()
 {
 }
 
-void PalmSystemPlugin::keepAlive(bool keep)
+void PalmSystemExtension::keepAlive(bool keep)
 {
     mApplicationWindow->setKeepAlive(keep);
 }
 
-void PalmSystemPlugin::markFirstUseDone()
+void PalmSystemExtension::markFirstUseDone()
 {
     QFile firstUseMarker("/var/luna/preferences/ran-first-use");
     firstUseMarker.open(QIODevice::ReadWrite);
     firstUseMarker.close();
 }
 
-void PalmSystemPlugin::registerPropertyChangeHandler(int successCallbackId, int errorCallbackId)
+void PalmSystemExtension::registerPropertyChangeHandler(int successCallbackId, int errorCallbackId)
 {
     mPropertyChangeHandlerCallbackId = successCallbackId;
 }
 
-void PalmSystemPlugin::setProperty(const QString &name, const QVariant &value)
+void PalmSystemExtension::setProperty(const QString &name, const QVariant &value)
 {
 }
 
-void PalmSystemPlugin::getProperty(int successCallbackId, int errorCallbackId, const QString &name)
+void PalmSystemExtension::getProperty(int successCallbackId, int errorCallbackId, const QString &name)
 {
     if (name == "launchParams") {
         callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->parameters());
@@ -119,7 +119,7 @@ void PalmSystemPlugin::getProperty(int successCallbackId, int errorCallbackId, c
     }
 }
 
-void PalmSystemPlugin::initializeProperties(int successCallbackId, int errorCallbackId)
+void PalmSystemExtension::initializeProperties(int successCallbackId, int errorCallbackId)
 {
     QJsonObject rootObj;
 
@@ -146,7 +146,7 @@ void PalmSystemPlugin::initializeProperties(int successCallbackId, int errorCall
     callback(successCallbackId, document.toJson());
 }
 
-QString PalmSystemPlugin::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
+QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
 {
     QString response = "{}";
 
@@ -156,7 +156,7 @@ QString PalmSystemPlugin::handleSynchronousCall(const QString& funcName, const Q
     return response;
 }
 
-QString PalmSystemPlugin::getResource(const QJsonArray& params)
+QString PalmSystemExtension::getResource(const QJsonArray& params)
 {
     if (params.count() != 2 || !params.at(0).isString())
         return QString("");

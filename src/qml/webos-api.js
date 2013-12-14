@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 _webOS = {
-    plugins: {},
+    extensions: {},
     constructors: {},
     callbacks: {},
 };
@@ -62,10 +62,10 @@ _webOS.callbackWithoutRemove = function() {
 };
 
 /**
- * Execute a call to a plugin function
+ * Execute a call to a extension function
  * @return bool true on success, false on error (e.g. function doesn't exist)
  */
-_webOS.exec = function(successCallback, errorCallback, pluginName, functionName, parameters) {
+_webOS.exec = function(successCallback, errorCallback, extensionName, functionName, parameters) {
     if (callbackId % 2) {
         callbackId++;
     }
@@ -83,32 +83,32 @@ _webOS.exec = function(successCallback, errorCallback, pluginName, functionName,
     parameters.unshift(ecId);
     parameters.unshift(scId);
 
-    navigator.qt.postMessage(JSON.stringify({messageType: "callPluginFunction", plugin: pluginName, func: functionName, params: parameters}))
+    navigator.qt.postMessage(JSON.stringify({messageType: "callExtensionFunction", extension: extensionName, func: functionName, params: parameters}))
     return true;
 }
 
 /**
- * Execute a call to a plugin function
+ * Execute a call to a extension function
  * @return bool true on success, false on error (e.g. function doesn't exist)
  */
-_webOS.execWithoutCallback = function(pluginName, functionName, parameters) {
+_webOS.execWithoutCallback = function(extensionName, functionName, parameters) {
     // if no parameters are supplied create an empty array
     if (typeof parameters === 'undefined')
         parameters = [];
 
-    navigator.qt.postMessage(JSON.stringify({messageType: "callPluginFunction", plugin: pluginName, func: functionName, params: parameters}))
+    navigator.qt.postMessage(JSON.stringify({messageType: "callExtensionFunction", extension: extensionName, func: functionName, params: parameters}))
     return true;
 }
 
 /**
- * Execute a synchronous call to a plugin function
+ * Execute a synchronous call to a extension function
  * @return string response data
  */
-_webOS.execSync = function(pluginName, functionName, parameters) {
+_webOS.execSync = function(extensionName, functionName, parameters) {
     if (typeof parameters === 'undefined')
       parameters = [];
 
-    return navigator.qt.postSyncMessage(JSON.stringify({messageType: "callSyncPluginFunction", plugin: pluginName, func: functionName, params: parameters}));
+    return navigator.qt.postSyncMessage(JSON.stringify({messageType: "callSyncExtensionFunction", extension: extensionName, func: functionName, params: parameters}));
 }
 
 var unusedCallback = function() { }

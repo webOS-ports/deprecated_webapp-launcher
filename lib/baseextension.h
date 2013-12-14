@@ -27,13 +27,13 @@ namespace luna
 
 class ScriptExecutor;
 
-class WebAppBasePlugin : public QObject
+class BaseExtension : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name)
 
 public:
-    explicit WebAppBasePlugin(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent = 0);
+    explicit BaseExtension(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent = 0);
 
     QString name() const;
 

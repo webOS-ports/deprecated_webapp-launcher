@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QMap>
 
-#include <webappbaseplugin.h>
+#include <baseextension.h>
 
 #include "lunaservicemgr.h"
 
@@ -54,11 +54,11 @@ private:
     bool mCallActive;
 };
 
-class PalmServiceBridgePlugin : public WebAppBasePlugin
+class PalmServiceBridgeExtension : public BaseExtension
 {
     Q_OBJECT
 public:
-    explicit PalmServiceBridgePlugin(WebApplicationWindow *applicationWindow, QObject *parent = 0);
+    explicit PalmServiceBridgeExtension(WebApplicationWindow *applicationWindow, QObject *parent = 0);
 
 public slots:
     void createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId);
