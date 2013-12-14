@@ -33,6 +33,7 @@ PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow
     mPropertyChangeHandlerCallbackId(0),
     mApplicationWindow(applicationWindow)
 {
+    applicationWindow->registerUserScript(QUrl("qrc:///extensions/PalmSystem.js"));
 }
 
 void PalmSystemExtension::stageReady()

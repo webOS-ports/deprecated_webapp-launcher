@@ -15,43 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BASEPLUGIN_H
-#define BASEPLUGIN_H
-
-#include <QObject>
-#include <QString>
-#include <QJsonArray>
+#include "applicationenvironment.h"
 
 namespace luna
 {
 
-class ApplicationEnvironment;
-
-class BaseExtension : public QObject
+ApplicationEnvironment::ApplicationEnvironment(QObject *parent) :
+    QObject(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QString name READ name)
-
-public:
-    explicit BaseExtension(const QString &name, ApplicationEnvironment *environment, QObject *parent = 0);
-
-    virtual void initialize();
-
-    QString name() const;
-
-    virtual QString handleSynchronousCall(const QString& funcName, const QJsonArray& params);
-
-protected:
-    void callbackWithoutRemove(int id, const QString &parameters);
-    void callback(int id, const QString &parameters);
-
-protected:
-    ApplicationEnvironment *mAppEnvironment;
-
-private:
-    QString mName;
-};
+}
 
 } // namespace luna
-
-#endif // BASEPLUGIN_H

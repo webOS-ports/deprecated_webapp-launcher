@@ -15,43 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BASEPLUGIN_H
-#define BASEPLUGIN_H
+#ifndef APPLICATIONPLUGIN_H
+#define APPLICATIONPLUGIN_H
 
 #include <QObject>
-#include <QString>
-#include <QJsonArray>
+#include <QList>
 
 namespace luna
 {
 
+class BaseExtension;
 class ApplicationEnvironment;
 
-class BaseExtension : public QObject
+class ApplicationPlugin
 {
-    Q_OBJECT
-    Q_PROPERTY(QString name READ name)
-
 public:
-    explicit BaseExtension(const QString &name, ApplicationEnvironment *environment, QObject *parent = 0);
-
-    virtual void initialize();
-
-    QString name() const;
-
-    virtual QString handleSynchronousCall(const QString& funcName, const QJsonArray& params);
-
-protected:
-    void callbackWithoutRemove(int id, const QString &parameters);
-    void callback(int id, const QString &parameters);
-
-protected:
-    ApplicationEnvironment *mAppEnvironment;
-
-private:
-    QString mName;
+    virtual QList<BaseExtension*> createExtensions(ApplicationEnvironment *executor) = 0;
 };
 
 } // namespace luna
 
-#endif // BASEPLUGIN_H
+Q_DECLARE_INTERFACE(luna::ApplicationPlugin, "org.webosports.Application.PluginInterface")
+
+#endif // APPLICATIONPLUGIN_H

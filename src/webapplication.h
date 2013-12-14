@@ -32,6 +32,7 @@ namespace luna
 class WebAppLauncher;
 class BaseExtension;
 class WebApplicationWindow;
+class WebApplicationPlugin;
 
 class WebApplication : public QObject
 {
@@ -66,6 +67,8 @@ public:
     bool privileged() const;
     QString trustScope() const;
 
+    WebApplicationPlugin* plugin() const;
+
     void setActivityId(int activityId);
 
     void changeActivityFocus(bool focus);
@@ -91,6 +94,9 @@ private:
     QList<WebApplicationWindow*> mChildWindows;
     bool mLaunchedAtBoot;
     bool mPrivileged;
+    WebApplicationPlugin* mPlugin;
+
+    void loadPlugin();
 };
 
 } // namespace luna

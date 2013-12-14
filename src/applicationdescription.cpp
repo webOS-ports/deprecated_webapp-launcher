@@ -37,7 +37,9 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mIcon(other.icon()),
     mEntryPoint(other.entryPoint()),
     mHeadless(other.headless()),
-    mTrustScope(other.trustScope())
+    mTrustScope(other.trustScope()),
+    mPluginName(other.pluginName()),
+    mApplicationBasePath(other.basePath())
 {
 }
 
@@ -89,6 +91,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
     if (mIcon.isEmpty() || !mIcon.isLocalFile() || !QFile::exists(mIcon.toLocalFile()))
         mIcon = QUrl("qrc:///qml/images/default-app-icon.png");
+
+    if (rootObject.contains("plugin") && rootObject.value("plugin").isString())
+        mPluginName = rootObject.value("plugin").toString();
 }
 
 QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
@@ -136,6 +141,16 @@ bool ApplicationDescription::headless() const
 ApplicationDescription::TrustScope ApplicationDescription::trustScope() const
 {
     return mTrustScope;
+}
+
+QString ApplicationDescription::basePath() const
+{
+    return mApplicationBasePath;
+}
+
+QString ApplicationDescription::pluginName() const
+{
+    return mPluginName;
 }
 
 }

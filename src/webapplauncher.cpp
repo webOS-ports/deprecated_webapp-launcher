@@ -77,6 +77,7 @@ void WebAppLauncher::launchApp(const QString &manifestPath, const QString &param
     manifestFile.close();
 
     QString applicationBasePath = QFileInfo(manifestPath).absoluteDir().path();
+    qDebug() << "applicationBasePath" << applicationBasePath;
     ApplicationDescription desc(manifestData, applicationBasePath);
 
     if (!validateApplication(desc)) {

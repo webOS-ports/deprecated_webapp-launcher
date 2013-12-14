@@ -9,7 +9,7 @@ webos_component(0 1 0)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x -g")
 
 find_package(Qt5Gui REQUIRED)
 if(NOT Qt5Gui_FOUND)

@@ -16,14 +16,18 @@
  */
 
 #include "baseextension.h"
-#include "scriptexecutor.h"
+#include "applicationenvironment.h"
 
 using namespace luna;
 
-BaseExtension::BaseExtension(const QString &name, ScriptExecutor *scriptExecutor, QObject *parent) :
+BaseExtension::BaseExtension(const QString &name, ApplicationEnvironment *environment, QObject *parent) :
     QObject(parent),
-    mExecutor(scriptExecutor),
+    mAppEnvironment(environment),
     mName(name)
+{
+}
+
+void BaseExtension::initialize()
 {
 }
 
@@ -48,7 +52,7 @@ void BaseExtension::callback(int id, const QString &parameters)
         script = QString("_webOS.callback(%1);").arg(id);
     }
 
-    mExecutor->executeScript(script);
+    mAppEnvironment->executeScript(script);
 }
 
 void BaseExtension::callbackWithoutRemove(int id, const QString &parameters)
@@ -62,5 +66,5 @@ void BaseExtension::callbackWithoutRemove(int id, const QString &parameters)
         script = QString("_webOS.callbackWithoutRemove(%1);").arg(id);
     }
 
-    mExecutor->executeScript(script);
+    mAppEnvironment->executeScript(script);
 }

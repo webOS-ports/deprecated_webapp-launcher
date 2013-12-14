@@ -11,6 +11,7 @@ set(SOURCES
     utils.cpp
     webapplauncher.cpp
     webapplication.cpp
+    webapplicationplugin.cpp
     webapplicationwindow.cpp
     applicationdescription.cpp
     extensions/lunaservicemgr.cpp
@@ -21,6 +22,7 @@ set(HEADERS
     utils.h
     webapplauncher.h
     webapplication.h
+    webapplicationplugin.h
     webapplicationwindow.h
     applicationdescription.h
     extensions/lunaservicemgr.h

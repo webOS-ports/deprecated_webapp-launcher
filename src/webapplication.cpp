@@ -32,6 +32,7 @@
 #include "applicationdescription.h"
 #include "webapplication.h"
 #include "webapplicationwindow.h"
+#include "webapplicationplugin.h"
 
 #include <Settings.h>
 
@@ -50,8 +51,11 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mParameters(parameters),
     mMainWindow(0),
     mLaunchedAtBoot(false),
-    mPrivileged(false)
+    mPrivileged(false),
+    mPlugin(0)
 {
+    loadPlugin();
+
     // Only system applications with a specific id prefix are privileged to access
     // the private luna bus
     if (mDescription.trustScope() == ApplicationDescription::TrustScopeSystem &&
@@ -67,6 +71,24 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
 
 WebApplication::~WebApplication()
 {
+}
+
+void WebApplication::loadPlugin()
+{
+    QFileInfo pluginPath(QString("%1/%2")
+                         .arg(mDescription.basePath())
+                         .arg(mDescription.pluginName()));
+
+    if (pluginPath.absoluteFilePath().length() == 0 || !pluginPath.exists())
+        return;
+
+    mPlugin = new WebApplicationPlugin(pluginPath);
+    if (!mPlugin->load()) {
+        delete mPlugin;
+        mPlugin = 0;
+    }
+
+    qDebug() << "Plugin" << mDescription.pluginName() << "successfully loaded";
 }
 
 void WebApplication::setActivityId(int activityId)
@@ -208,6 +230,11 @@ QString WebApplication::trustScope() const
     }
 
     return QString("unknown");
+}
+
+WebApplicationPlugin* WebApplication::plugin() const
+{
+    return mPlugin;
 }
 
 } // namespace luna

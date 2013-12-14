@@ -69,7 +69,7 @@ Flickable {
             // PalmServiceBridge to avoid remote applications accessing unwanted system
             // internals
             if (webApp.trustScope === "system") {
-                webView.userScripts = [ Qt.resolvedUrl("webos-api.js") ];
+                webView.userScripts = webAppWindow.userScripts;
 
                 if (experimental.preferences.hasOwnProperty("palmServiceBridgeEnabled"))
                     experimental.preferences.palmServiceBridgeEnabled = true;

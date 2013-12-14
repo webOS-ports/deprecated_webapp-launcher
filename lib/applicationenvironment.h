@@ -23,13 +23,14 @@
 namespace luna
 {
 
-class ScriptExecutor : public QObject
+class ApplicationEnvironment : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScriptExecutor(QObject *parent = 0);
+    explicit ApplicationEnvironment(QObject *parent = 0);
 
     virtual void executeScript(const QString &script) = 0;
+    virtual void registerUserScript(const QUrl &path) = 0;
 };
 
 } // namespace luna

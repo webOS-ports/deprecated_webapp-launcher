@@ -29,7 +29,7 @@
 #endif
 #include <QtWebKit/private/qwebloadrequest_p.h>
 
-#include <scriptexecutor.h>
+#include <applicationenvironment.h>
 
 namespace luna
 {
@@ -37,10 +37,11 @@ namespace luna
 class BaseExtension;
 class WebApplication;
 
-class WebApplicationWindow : public ScriptExecutor
+class WebApplicationWindow : public ApplicationEnvironment
 {
     Q_OBJECT
     Q_PROPERTY(WebApplication *application READ application)
+    Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
@@ -59,9 +60,12 @@ public:
     bool keepAlive() const;
     QQuickWebView *webView() const;
 
+    QList<QUrl> userScripts() const;
+
     void setKeepAlive(bool alive);
 
     void executeScript(const QString &script);
+    void registerUserScript(const QUrl &path);
 
 signals:
     void javaScriptExecNeeded(const QString &script);
@@ -94,10 +98,12 @@ private:
     bool mStagePreparing;
     bool mStageReady;
     QTimer mShowWindowTimer;
+    QList<QUrl> mUserScripts;
 
     void createAndSetup();
+    void initializeAllExtensions();
+    void addExtension(BaseExtension *extension);
     void createDefaultExtensions();
-    void createAndInitializeExtension(BaseExtension *plugin);
     void setWindowProperty(const QString &name, const QVariant &value);
     void setupPage();
 };

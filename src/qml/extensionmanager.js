@@ -26,14 +26,12 @@ function addExtension(extensionName, pluginObject) {
 
 function messageHandler(message) {
     var received = JSON.parse(message.data);
-    if (typeof received === 'undefined')
-        return false;
-    if (typeof received.messageType === 'undefined')
+    if (typeof received === 'undefined' || typeof received.messageType === 'undefined')
         return false;
     if (received.messageType === "callExtensionFunction") {
-        if (typeof received.plugin === 'undefined' || typeof received.func == 'undefined')
+        if (typeof received.extension === 'undefined' || typeof received.func === 'undefined')
             return false;
-        execMethod(received.plugin, received.func, received.params);
+        execMethod(received.extension, received.func, received.params);
     }
     return true;
 }

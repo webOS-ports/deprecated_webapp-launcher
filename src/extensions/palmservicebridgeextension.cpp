@@ -87,6 +87,7 @@ PalmServiceBridgeExtension::PalmServiceBridgeExtension(WebApplicationWindow *app
     BaseExtension("PalmServiceBridge", applicationWindow, parent),
     mApplicationWindow(applicationWindow)
 {
+    applicationWindow->registerUserScript(QUrl("qrc:///extensions/PalmServiceBridge.js"));
 }
 
 bool PalmServiceBridgeExtension::isPrivilegedApplcation(const QString& id)
