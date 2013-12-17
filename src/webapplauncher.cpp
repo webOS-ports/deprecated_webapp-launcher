@@ -85,6 +85,10 @@ void WebAppLauncher::launchApp(const QString &manifestPath, const QString &param
         return;
     }
 
+    // We set the application id as application name so that locally stored things for
+    // each application are separated and remain after the application was stopped.
+    QCoreApplication::setApplicationName(desc.id());
+
     QString processId = QString("%0").arg(applicationPid());
     QString windowType = "card";
     QUrl entryPoint = desc.entryPoint();
