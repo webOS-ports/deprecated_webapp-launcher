@@ -55,6 +55,21 @@ int main(int argc, char **argv)
         setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 1);
     }
 
+    QString storagePath = "/media/cryptofs/.sysmgr";
+    QString storagePathEnv = qgetenv("PERSISTENT_STORAGE_PATH");
+    if (!storagePathEnv.isEmpty())
+        storagePath = storagePathEnv;
+
+    if (qgetenv("XDG_DATA_HOME").isEmpty()) {
+        QString dataDir = QString("%1/data").arg(storagePath);
+        setenv("XDG_DATA_HOME", dataDir.toUtf8().constData(), 1);
+    }
+
+    if (qgetenv("XDG_CACHE_HOME").isEmpty()) {
+        QString cacheDir = QString("%1/cache").arg(storagePath);
+        setenv("XDG_CACHE_HOME", cacheDir.toUtf8().constData(), 1);
+    }
+
     luna::WebAppLauncher webAppLauncher(argc, argv);
 
     context = g_option_context_new(NULL);
