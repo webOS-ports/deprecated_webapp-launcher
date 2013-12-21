@@ -15,30 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "baseplugin.h"
-#include "webapplicationwindow.h"
+#include "baseextension.h"
+#include "applicationenvironment.h"
 
-namespace luna
-{
+using namespace luna;
 
-BasePlugin::BasePlugin(const QString &name, WebApplicationWindow *applicationWindow, QObject *parent) :
+BaseExtension::BaseExtension(const QString &name, ApplicationEnvironment *environment, QObject *parent) :
     QObject(parent),
-    mApplicationWindow(applicationWindow),
+    mAppEnvironment(environment),
     mName(name)
 {
 }
 
-QString BasePlugin::name() const
+void BaseExtension::initialize()
+{
+}
+
+QString BaseExtension::name() const
 {
     return mName;
 }
 
-QString BasePlugin::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
+QString BaseExtension::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
 {
     return QString("");
 }
 
-void BasePlugin::callback(int id, const QString &parameters)
+void BaseExtension::callback(int id, const QString &parameters)
 {
     QString script;
 
@@ -49,10 +52,10 @@ void BasePlugin::callback(int id, const QString &parameters)
         script = QString("_webOS.callback(%1);").arg(id);
     }
 
-    mApplicationWindow->executeScript(script);
+    mAppEnvironment->executeScript(script);
 }
 
-void BasePlugin::callbackWithoutRemove(int id, const QString &parameters)
+void BaseExtension::callbackWithoutRemove(int id, const QString &parameters)
 {
     QString script;
 
@@ -63,7 +66,5 @@ void BasePlugin::callbackWithoutRemove(int id, const QString &parameters)
         script = QString("_webOS.callbackWithoutRemove(%1);").arg(id);
     }
 
-    mApplicationWindow->executeScript(script);
+    mAppEnvironment->executeScript(script);
 }
-
-} // namespace luna

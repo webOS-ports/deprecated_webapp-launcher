@@ -52,6 +52,9 @@ public:
     QUrl entryPoint() const;
     bool headless() const;
 
+    QString pluginName() const;
+    QString basePath() const;
+
 private:
     QString mId;
     QString mTitle;
@@ -60,6 +63,7 @@ private:
     bool mHeadless;
     QString mApplicationBasePath;
     TrustScope mTrustScope;
+    QString mPluginName;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);

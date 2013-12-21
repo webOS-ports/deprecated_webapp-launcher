@@ -29,16 +29,19 @@
 #endif
 #include <QtWebKit/private/qwebloadrequest_p.h>
 
+#include <applicationenvironment.h>
+
 namespace luna
 {
 
-class BasePlugin;
+class BaseExtension;
 class WebApplication;
 
-class WebApplicationWindow : public QObject
+class WebApplicationWindow : public ApplicationEnvironment
 {
     Q_OBJECT
     Q_PROPERTY(WebApplication *application READ application)
+    Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
@@ -57,14 +60,16 @@ public:
     bool keepAlive() const;
     QQuickWebView *webView() const;
 
+    QList<QUrl> userScripts() const;
+
     void setKeepAlive(bool alive);
 
-public slots:
     void executeScript(const QString &script);
+    void registerUserScript(const QUrl &path);
 
 signals:
     void javaScriptExecNeeded(const QString &script);
-    void pluginWantsToBeAdded(const QString &name, QObject *object);
+    void extensionWantsToBeAdded(const QString &name, QObject *object);
     void closed();
 
 protected:
@@ -81,7 +86,7 @@ private slots:
 
 private:
     WebApplication *mApplication;
-    QMap<QString, BasePlugin*> mPlugins;
+    QMap<QString, BaseExtension*> mExtensions;
     QQmlEngine mEngine;
     QObject *mRootItem;
     QQuickWindow *mWindow;
@@ -93,10 +98,12 @@ private:
     bool mStagePreparing;
     bool mStageReady;
     QTimer mShowWindowTimer;
+    QList<QUrl> mUserScripts;
 
     void createAndSetup();
-    void createPlugins();
-    void createAndInitializePlugin(BasePlugin *plugin);
+    void initializeAllExtensions();
+    void addExtension(BaseExtension *extension);
+    void createDefaultExtensions();
     void setWindowProperty(const QString &name, const QVariant &value);
     void setupPage();
 };

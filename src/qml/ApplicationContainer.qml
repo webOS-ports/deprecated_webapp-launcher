@@ -18,7 +18,7 @@
 import QtQuick 2.0
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
-import "pluginmanager.js" as PluginManager
+import "extensionmanager.js" as ExtensionManager
 import LunaNext 0.1
 Flickable {
     id: webViewContainer
@@ -69,7 +69,7 @@ Flickable {
             // PalmServiceBridge to avoid remote applications accessing unwanted system
             // internals
             if (webApp.trustScope === "system") {
-                webView.userScripts = [ Qt.resolvedUrl("webos-api.js") ];
+                webView.userScripts = webAppWindow.userScripts;
 
                 if (experimental.preferences.hasOwnProperty("palmServiceBridgeEnabled"))
                     experimental.preferences.palmServiceBridgeEnabled = true;
@@ -83,7 +83,7 @@ Flickable {
         }
 
         experimental.onMessageReceived: {
-            PluginManager.messageHandler(message);
+            ExtensionManager.messageHandler(message);
         }
 
         Connections {
@@ -93,8 +93,8 @@ Flickable {
                 webView.experimental.evaluateJavaScript(script);
             }
 
-            onPluginWantsToBeAdded: {
-                PluginManager.addPlugin(name, object);
+            onExtensionWantsToBeAdded: {
+                ExtensionManager.addExtension(name, object);
             }
         }
 

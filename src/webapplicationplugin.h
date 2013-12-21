@@ -15,41 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BASEPLUGIN_H
-#define BASEPLUGIN_H
+
+#ifndef WEBAPPLICATIONPLUGIN_H
+#define WEBAPPLICATIONPLUGIN_H
 
 #include <QObject>
-#include <QString>
-#include <QJsonArray>
+#include <QFileInfo>
+#include <QPluginLoader>
+#include <QFileInfo>
+
+#include <applicationplugin.h>
 
 namespace luna
 {
 
-class WebApplicationWindow;
-
-class BasePlugin : public QObject
+class WebApplicationPlugin : public QObject,
+                             public ApplicationPlugin
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name)
-
 public:
-    explicit BasePlugin(const QString &name, WebApplicationWindow *applicationWindow, QObject *parent = 0);
+    WebApplicationPlugin(const QFileInfo &path, QObject *parent = 0);
 
-    QString name() const;
+    bool load();
 
-    virtual QString handleSynchronousCall(const QString& funcName, const QJsonArray& params);
-
-protected:
-    void callbackWithoutRemove(int id, const QString &parameters);
-    void callback(int id, const QString &parameters);
-
-protected:
-    WebApplicationWindow *mApplicationWindow;
+    QList<BaseExtension*> createExtensions(ApplicationEnvironment *environment);
 
 private:
-    QString mName;
+    QPluginLoader mLoader;
+    ApplicationPlugin *mInstance;
+    QFileInfo mPath;
 };
 
 } // namespace luna
 
-#endif // BASEPLUGIN_H
+#endif // WEBAPPLICATIONPLUGIN_H

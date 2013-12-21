@@ -33,17 +33,17 @@
 #include "applicationdescription.h"
 #include "webapplication.h"
 #include "webapplicationwindow.h"
+#include "webapplicationplugin.h"
 
-#include "plugins/baseplugin.h"
-#include "plugins/palmsystemplugin.h"
-#include "plugins/palmservicebridgeplugin.h"
+#include "extensions/palmsystemextension.h"
+#include "extensions/palmservicebridgeextension.h"
 
 namespace luna
 {
 
 WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
                                            bool headless, QObject *parent) :
-    QObject(parent),
+    ApplicationEnvironment(parent),
     mApplication(application),
     mEngine(this),
     mRootItem(0),
@@ -75,7 +75,9 @@ void WebApplicationWindow::setWindowProperty(const QString &name, const QVariant
 
 void WebApplicationWindow::createAndSetup()
 {
-    // FIXME evaluate window properties and configure the window accordingly
+    mUserScripts.append(QUrl("qrc:///qml/webos-api.js"));
+
+    createDefaultExtensions();
 
     mEngine.rootContext()->setContextProperty("webApp", mApplication);
     mEngine.rootContext()->setContextProperty("webAppWindow", this);
@@ -127,7 +129,7 @@ void WebApplicationWindow::createAndSetup()
             this, SLOT(onSyncMessageReceived(const QVariantMap&, QString&)));
 #endif
 
-    createPlugins();
+    initializeAllExtensions();
 }
 
 void WebApplicationWindow::onShowWindowTimeout()
@@ -200,37 +202,54 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
         return;
 
     messageType = rootObject.value("messageType").toString();
-    if (messageType != "callSyncPluginFunction")
+    if (messageType != "callSyncExtensionFunction")
         return;
 
-    if (!(rootObject.contains("plugin") && rootObject.value("plugin").isString()) ||
+    if (!(rootObject.contains("extension") && rootObject.value("extension").isString()) ||
         !(rootObject.contains("func") && rootObject.value("func").isString()) ||
         !(rootObject.contains("params") && rootObject.value("params").isArray()))
         return;
 
-    QString pluginName = rootObject.value("plugin").toString();
+    QString extensionName = rootObject.value("extension").toString();
     QString funcName = rootObject.value("func").toString();
     QJsonArray params = rootObject.value("params").toArray();
 
-    if (!mPlugins.contains(pluginName))
+    if (!mExtensions.contains(extensionName))
         return;
 
-    BasePlugin *plugin = mPlugins.value(pluginName);
-    response = plugin->handleSynchronousCall(funcName, params);
+    BaseExtension *extension = mExtensions.value(extensionName);
+    response = extension->handleSynchronousCall(funcName, params);
 }
 
 #endif
 
-void WebApplicationWindow::createPlugins()
+void WebApplicationWindow::createDefaultExtensions()
 {
-    createAndInitializePlugin(new PalmSystemPlugin(this));
-    createAndInitializePlugin(new PalmServiceBridgePlugin(this));
+    addExtension(new PalmSystemExtension(this));
+    addExtension(new PalmServiceBridgeExtension(this));
+
+    if (!mApplication->plugin())
+        return;
+
+    QList<BaseExtension*> extensions = mApplication->plugin()->createExtensions(this);
+    Q_FOREACH(BaseExtension *extension, extensions) {
+        addExtension(extension);
+    }
 }
 
-void WebApplicationWindow::createAndInitializePlugin(BasePlugin *plugin)
+void WebApplicationWindow::addExtension(BaseExtension *extension)
 {
-    mPlugins.insert(plugin->name(), plugin);
-    emit pluginWantsToBeAdded(plugin->name(), plugin);
+    qDebug() << "Adding extension" << extension->name();
+    mExtensions.insert(extension->name(), extension);
+}
+
+void WebApplicationWindow::initializeAllExtensions()
+{
+    foreach(BaseExtension *extension, mExtensions.values()) {
+        qDebug() << "Initializing extension" << extension->name();
+        emit extensionWantsToBeAdded(extension->name(), extension);
+        extension->initialize();
+    }
 }
 
 void WebApplicationWindow::onClosed()
@@ -292,6 +311,11 @@ void WebApplicationWindow::executeScript(const QString &script)
     emit javaScriptExecNeeded(script);
 }
 
+void WebApplicationWindow::registerUserScript(const QUrl &path)
+{
+    mUserScripts.append(path);
+}
+
 WebApplication* WebApplicationWindow::application() const
 {
     return mApplication;
@@ -315,6 +339,11 @@ bool WebApplicationWindow::keepAlive() const
 bool WebApplicationWindow::headless() const
 {
     return mHeadless;
+}
+
+QList<QUrl> WebApplicationWindow::userScripts() const
+{
+    return mUserScripts;
 }
 
 } // namespace luna

@@ -18,18 +18,18 @@
 #ifndef PALMSYSTEMPLUGIN_H
 #define PALMSYSTEMPLUGIN_H
 
-#include "baseplugin.h"
+#include <baseextension.h>
 
 namespace luna
 {
 
-class WebApplication;
+class WebApplicationWindow;
 
-class PalmSystemPlugin : public BasePlugin
+class PalmSystemExtension : public BaseExtension
 {
     Q_OBJECT
 public:
-    explicit PalmSystemPlugin(WebApplicationWindow *applicationWindow, QObject *parent = 0);
+    explicit PalmSystemExtension(WebApplicationWindow *applicationWindow, QObject *parent = 0);
 
     QString handleSynchronousCall(const QString& funcName, const QJsonArray& params);
 
@@ -108,6 +108,7 @@ public slots:
 
 private:
     int mPropertyChangeHandlerCallbackId;
+    WebApplicationWindow *mApplicationWindow;
 
     QString getResource(const QJsonArray& params);
 };

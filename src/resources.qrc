@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Window.qml</file>
-        <file>qml/pluginmanager.js</file>
+        <file>qml/extensionmanager.js</file>
         <file>qml/webos-api.js</file>
         <file>qml/ApplicationContainer.qml</file>
+        <file>extensions/PalmServiceBridge.js</file>
+        <file>extensions/PalmSystem.js</file>
     </qresource>
 </RCC>

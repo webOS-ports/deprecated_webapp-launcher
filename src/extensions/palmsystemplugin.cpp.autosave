@@ -21,8 +21,8 @@
 #include <QQuickView>
 #include <QFile>
 
-#include "webapplication.h"
-#include "webapplicationwindow.h"
+#include "../webapplication.h"
+#include "../   vwebapplicationwindow.h"
 #include "palmsystemplugin.h"
 
 namespace luna
@@ -30,7 +30,8 @@ namespace luna
 
 PalmSystemPlugin::PalmSystemPlugin(WebApplicationWindow *applicationWindow, QObject *parent) :
     BasePlugin("PalmSystem", applicationWindow, parent),
-    mPropertyChangeHandlerCallbackId(0)
+    mPropertyChangeHandlerCallbackId(0),
+    mApplicationWindow(applicationWindow)
 {
 }
 
