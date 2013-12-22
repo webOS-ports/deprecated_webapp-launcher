@@ -164,6 +164,9 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
         break;
     }
 
+    Q_FOREACH(BaseExtension *extension, mExtensions.values())
+        extension->initialize();
+
     if (mHeadless)
         return;
 
@@ -248,7 +251,6 @@ void WebApplicationWindow::initializeAllExtensions()
     foreach(BaseExtension *extension, mExtensions.values()) {
         qDebug() << "Initializing extension" << extension->name();
         emit extensionWantsToBeAdded(extension->name(), extension);
-        extension->initialize();
     }
 }
 
