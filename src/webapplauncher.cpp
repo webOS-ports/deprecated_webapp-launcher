@@ -43,6 +43,9 @@ WebAppLauncher::WebAppLauncher(int &argc, char **argv)
     // and will refuse to start. There should really no need to extend this list and
     // therefore it will be kept static forever.
     mAllowedHeadlessApps << "com.palm.app.email";
+    mAllowedHeadlessApps << "com.palm.app.calendar";
+    mAllowedHeadlessApps << "com.palm.app.clock";
+    mAllowedHeadlessApps << "org.webosinternals.tweaks";
 }
 
 WebAppLauncher::~WebAppLauncher()
