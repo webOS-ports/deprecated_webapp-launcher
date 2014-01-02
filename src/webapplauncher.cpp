@@ -93,6 +93,8 @@ void WebAppLauncher::launchApp(const QString &manifestPath, const QString &param
     // each application are separated and remain after the application was stopped.
     QCoreApplication::setApplicationName(desc.id());
 
+    QQuickWebViewExperimental::setFlickableViewportEnabled(desc.flickable());
+
     QString processId = QString("%0").arg(applicationPid());
     QString windowType = "card";
     QUrl entryPoint = desc.entryPoint();

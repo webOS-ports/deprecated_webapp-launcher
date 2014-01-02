@@ -39,12 +39,14 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mHeadless(other.headless()),
     mTrustScope(other.trustScope()),
     mPluginName(other.pluginName()),
-    mApplicationBasePath(other.basePath())
+    mApplicationBasePath(other.basePath()),
+    mFlickable(other.flickable())
 {
 }
 
 ApplicationDescription::ApplicationDescription(const QString &data, const QString &applicationBasePath) :
     mHeadless(false),
+    mFlickable(false),
     mApplicationBasePath(applicationBasePath),
     mTrustScope(ApplicationDescription::TrustScopeSystem)
 {
@@ -88,6 +90,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
         mIcon = iconPath;
     }
+
+    if (rootObject.contains("flickable") && rootObject.value("flickable").isBool())
+        mFlickable = rootObject.value("flickable").toBool();
 
     if (mIcon.isEmpty() || !mIcon.isLocalFile() || !QFile::exists(mIcon.toLocalFile()))
         mIcon = QUrl("qrc:///qml/images/default-app-icon.png");
@@ -151,6 +156,11 @@ QString ApplicationDescription::basePath() const
 QString ApplicationDescription::pluginName() const
 {
     return mPluginName;
+}
+
+bool ApplicationDescription::flickable() const
+{
+    return mFlickable;
 }
 
 }

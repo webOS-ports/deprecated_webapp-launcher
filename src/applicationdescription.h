@@ -33,6 +33,7 @@ class ApplicationDescription : public QObject
     Q_PROPERTY(QUrl icon READ icon CONSTANT)
     Q_PROPERTY(QUrl entryPoint READ entryPoint CONSTANT)
     Q_PROPERTY(bool headless READ headless CONSTANT)
+    Q_PROPERTY(bool flickable READ flickable CONSTANT)
     Q_ENUMS(TrustScope)
 
 public:
@@ -51,6 +52,7 @@ public:
     QUrl icon() const;
     QUrl entryPoint() const;
     bool headless() const;
+    bool flickable() const;
 
     QString pluginName() const;
     QString basePath() const;
@@ -64,6 +66,7 @@ private:
     QString mApplicationBasePath;
     TrustScope mTrustScope;
     QString mPluginName;
+    bool mFlickable;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);
