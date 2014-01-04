@@ -75,7 +75,7 @@ WebApplication::~WebApplication()
 
 void WebApplication::loadPlugin()
 {
-    QFileInfo pluginPath(QString("%1/%2")
+    QFileInfo pluginPath(QString("%1/plugins/%2")
                          .arg(mDescription.basePath())
                          .arg(mDescription.pluginName()));
 
