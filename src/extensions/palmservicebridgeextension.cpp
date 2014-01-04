@@ -25,13 +25,12 @@
 namespace luna
 {
 
-PalmServiceBridge::PalmServiceBridge(const QString& identifier, bool usePrivateBus, QObject *parent) :
+PalmServiceBridge::PalmServiceBridge(int instanceId, const QString& identifier, bool usePrivateBus, QObject *parent) :
     QObject(parent),
+    mInstanceId(instanceId),
     mCanceled(false),
     mUsePrivateBus(usePrivateBus),
     mIdentifier(identifier),
-    mSuccessCallbackId(0),
-    mErrorCallbackId(0),
     mCallActive(false)
 {
 }
@@ -39,14 +38,14 @@ PalmServiceBridge::PalmServiceBridge(const QString& identifier, bool usePrivateB
 void PalmServiceBridge::serviceResponse(const char *body)
 {
     QString arguments = QString("'%1'").arg((body == NULL ? "" : body));
-    callback(mSuccessCallbackId, arguments);
+    callback(arguments);
     mCallActive = false;
 }
 
-void PalmServiceBridge::call(int successCallbackId, int errorCallbackId, const QString &uri, const QString &payload)
+void PalmServiceBridge::call(const QString &uri, const QString &payload)
 {
     if (mCallActive) {
-        callback(errorCallbackId, "");
+        callback("");
         mCallActive = false;
         return;
     }
@@ -54,25 +53,20 @@ void PalmServiceBridge::call(int successCallbackId, int errorCallbackId, const Q
     LunaServiceManager *mgr = LunaServiceManager::instance();
 
     mCanceled = false;
-    mSuccessCallbackId = successCallbackId;
-    mErrorCallbackId = errorCallbackId;
 
     mgr->call(uri.toUtf8().constData(), payload.toUtf8().constData(),
               this, mIdentifier.toUtf8().constData(), mUsePrivateBus);
 
     if (LSMESSAGE_TOKEN_INVALID == listenerToken) {
-        cancel(0, 0);
-        callback(errorCallbackId, "");
+        cancel();
+        callback("");
         mCallActive = false;
         return;
     }
 }
 
-void PalmServiceBridge::cancel(int successCallbackId, int errorCallbackId)
+void PalmServiceBridge::cancel()
 {
-    Q_UNUSED(successCallbackId);
-    Q_UNUSED(errorCallbackId);
-
     if (mCanceled)
         return;
 
@@ -81,6 +75,13 @@ void PalmServiceBridge::cancel(int successCallbackId, int errorCallbackId)
         LunaServiceManager::instance()->cancel(this);
 
     mCallActive = false;
+
+    callback("");
+}
+
+int PalmServiceBridge::instanceId() const
+{
+    return mInstanceId;
 }
 
 PalmServiceBridgeExtension::PalmServiceBridgeExtension(WebApplicationWindow *applicationWindow, QObject *parent) :
@@ -97,24 +98,19 @@ bool PalmServiceBridgeExtension::isPrivilegedApplcation(const QString& id)
            id.startsWith("org.webosports.");
 }
 
-void PalmServiceBridgeExtension::createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::createInstance(unsigned int instanceId)
 {
-    if (mBridgeInstances.contains(instanceId)) {
-        callback(errorCallbackId, "Can't create another instance with an already existing id");
+    if (mBridgeInstances.contains(instanceId))
         return;
-    }
 
-    PalmServiceBridge *bridge = new PalmServiceBridge(mApplicationWindow->application()->id(),
+    PalmServiceBridge *bridge = new PalmServiceBridge(instanceId, mApplicationWindow->application()->id(),
                                                       isPrivilegedApplcation(mApplicationWindow->application()->id()));
-    connect(bridge, SIGNAL(callback(int,QString)), this, SLOT(callbackFromBridge(int,QString)));
+    connect(bridge, SIGNAL(callback(QString)), this, SLOT(callbackFromBridge(QString)));
     mBridgeInstances.insert(instanceId, bridge);
 }
 
-void PalmServiceBridgeExtension::releaseInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::releaseInstance(unsigned int instanceId)
 {
-    Q_UNUSED(successCallbackId);
-    Q_UNUSED(errorCallbackId);
-
     if (!mBridgeInstances.contains(instanceId))
         return;
 
@@ -122,28 +118,31 @@ void PalmServiceBridgeExtension::releaseInstance(int successCallbackId, int erro
     bridge->deleteLater();
 }
 
-void PalmServiceBridgeExtension::callbackFromBridge(int id, const QString &arguments)
+void PalmServiceBridgeExtension::callbackFromBridge(const QString &arguments)
 {
-    callback(id, arguments);
+    PalmServiceBridge *bridge = static_cast<PalmServiceBridge*>(sender());
+    int instanceId = bridge->instanceId();
+
+    QString command = QString("__PalmServiceBridge_handleServiceResponse(%1, %2);").arg(instanceId).arg(arguments);
+    mAppEnvironment->executeScript(command);
 }
 
-void PalmServiceBridgeExtension::call(int successCallbackId, int errorCallbackId, unsigned int instanceId,
-                                   const QString& uri, const QString& payload)
+void PalmServiceBridgeExtension::call(unsigned int instanceId, const QString& uri, const QString& payload)
 {
     if (!mBridgeInstances.contains(instanceId))
         return;
 
     PalmServiceBridge *bridge = mBridgeInstances.value(instanceId);
-    bridge->call(successCallbackId, errorCallbackId, uri, payload);
+    bridge->call(uri, payload);
 }
 
-void PalmServiceBridgeExtension::cancel(int successCallbackId, int errorCallbackId, unsigned int instanceId)
+void PalmServiceBridgeExtension::cancel(unsigned int instanceId)
 {
     if (!mBridgeInstances.contains(instanceId))
         return;
 
     PalmServiceBridge *bridge = mBridgeInstances.value(instanceId);
-    bridge->cancel(successCallbackId, errorCallbackId);
+    bridge->cancel();
 }
 
 } // namespace luna

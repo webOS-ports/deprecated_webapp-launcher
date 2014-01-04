@@ -35,22 +35,23 @@ class PalmServiceBridge : public QObject,
 {
     Q_OBJECT
 public:
-    explicit PalmServiceBridge(const QString& identifier = "", bool usePrivateBus = false, QObject *parent = 0);
+    explicit PalmServiceBridge(int instanceId, const QString& identifier = "", bool usePrivateBus = false, QObject *parent = 0);
 
-    void call(int successCallbackId, int errorCallbackId, const QString &uri, const QString &payload);
-    void cancel(int successCallbackId, int errorCallbackId);
+    void call(const QString &uri, const QString &payload);
+    void cancel();
 
     virtual void serviceResponse(const char* body);
 
+    int instanceId() const;
+
 signals:
-    void callback(int id, const QString &arguments);
+    void callback(const QString &arguments);
 
 private:
+    int mInstanceId;
     bool mCanceled;
     bool mUsePrivateBus;
     QString mIdentifier;
-    int mSuccessCallbackId;
-    int mErrorCallbackId;
     bool mCallActive;
 };
 
@@ -61,13 +62,13 @@ public:
     explicit PalmServiceBridgeExtension(WebApplicationWindow *applicationWindow, QObject *parent = 0);
 
 public slots:
-    void createInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId);
-    void releaseInstance(int successCallbackId, int errorCallbackId, unsigned int instanceId);
-    void call(int successCallbackId, int errorCallbackId, unsigned int instanceId, const QString &uri, const QString &payload);
-    void cancel(int successCallbackId, int errorCallbackId, unsigned int instanceId);
+    void createInstance(unsigned int instanceId);
+    void releaseInstance(unsigned int instanceId);
+    void call(unsigned int instanceId, const QString &uri, const QString &payload);
+    void cancel(unsigned int instanceId);
 
 private slots:
-    void callbackFromBridge(int id, const QString &arguments);
+    void callbackFromBridge(const QString &arguments);
 
 private:
     QMap<unsigned int, PalmServiceBridge*> mBridgeInstances;
