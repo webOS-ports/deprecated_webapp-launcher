@@ -40,13 +40,15 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mTrustScope(other.trustScope()),
     mPluginName(other.pluginName()),
     mApplicationBasePath(other.basePath()),
-    mFlickable(other.flickable())
+    mFlickable(other.flickable()),
+    mInternetConnectivityRequired(other.internetConnectivityRequired())
 {
 }
 
 ApplicationDescription::ApplicationDescription(const QString &data, const QString &applicationBasePath) :
     mHeadless(false),
     mFlickable(false),
+    mInternetConnectivityRequired(false),
     mApplicationBasePath(applicationBasePath),
     mTrustScope(ApplicationDescription::TrustScopeSystem)
 {
@@ -93,6 +95,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
     if (rootObject.contains("flickable") && rootObject.value("flickable").isBool())
         mFlickable = rootObject.value("flickable").toBool();
+
+    if (rootObject.contains("internetConnectivityRequired") && rootObject.value("internetConnectivityRequired").isBool())
+        mInternetConnectivityRequired = rootObject.value("internetConnectivityRequired").toBool();
 
     if (mIcon.isEmpty() || !mIcon.isLocalFile() || !QFile::exists(mIcon.toLocalFile()))
         mIcon = QUrl("qrc:///qml/images/default-app-icon.png");
@@ -161,6 +166,11 @@ QString ApplicationDescription::pluginName() const
 bool ApplicationDescription::flickable() const
 {
     return mFlickable;
+}
+
+bool ApplicationDescription::internetConnectivityRequired() const
+{
+    return mInternetConnectivityRequired;
 }
 
 }

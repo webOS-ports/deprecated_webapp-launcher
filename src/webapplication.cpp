@@ -237,4 +237,9 @@ WebApplicationPlugin* WebApplication::plugin() const
     return mPlugin;
 }
 
+bool WebApplication::internetConnectivityRequired() const
+{
+    return mDescription.internetConnectivityRequired();
+}
+
 } // namespace luna

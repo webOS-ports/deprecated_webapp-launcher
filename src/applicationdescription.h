@@ -34,6 +34,7 @@ class ApplicationDescription : public QObject
     Q_PROPERTY(QUrl entryPoint READ entryPoint CONSTANT)
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool flickable READ flickable CONSTANT)
+    Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
     Q_ENUMS(TrustScope)
 
 public:
@@ -53,6 +54,7 @@ public:
     QUrl entryPoint() const;
     bool headless() const;
     bool flickable() const;
+    bool internetConnectivityRequired() const;
 
     QString pluginName() const;
     QString basePath() const;
@@ -67,6 +69,7 @@ private:
     TrustScope mTrustScope;
     QString mPluginName;
     bool mFlickable;
+    bool mInternetConnectivityRequired;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);
