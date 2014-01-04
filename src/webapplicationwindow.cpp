@@ -170,8 +170,10 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
     if (mHeadless)
         return;
 
+    if (mApplication->hasRemoteEntryPoint())
+        show();
     // If we don't got stageReady() start a timeout to wait for it
-    if (mStagePreparing && !mStageReady && !mShowWindowTimer.isActive())
+    else if (mStagePreparing && !mStageReady && !mShowWindowTimer.isActive())
         mShowWindowTimer.start(3000);
     // If we got stageReady() already while we were still loading the page we can now
     // safely show the window

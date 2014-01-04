@@ -137,6 +137,12 @@ QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
     return QUrl(QString("file://%1/%2").arg(mApplicationBasePath).arg(entryPoint));
 }
 
+bool ApplicationDescription::hasRemoteEntryPoint() const
+{
+    return mEntryPoint.scheme() == "http" ||
+           mEntryPoint.scheme() == "https";
+}
+
 QString ApplicationDescription::id() const
 {
     return mId;

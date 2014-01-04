@@ -247,4 +247,9 @@ QStringList WebApplication::urlsAllowed() const
     return mDescription.urlsAllowed();
 }
 
+bool WebApplication::hasRemoteEntryPoint() const
+{
+    return mDescription.hasRemoteEntryPoint();
+}
+
 } // namespace luna

@@ -70,6 +70,7 @@ public:
     QString trustScope() const;
     bool internetConnectivityRequired() const;
     QStringList urlsAllowed() const;
+    bool hasRemoteEntryPoint() const;
 
     WebApplicationPlugin* plugin() const;
 

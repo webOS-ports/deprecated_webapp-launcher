@@ -61,6 +61,8 @@ public:
     QString pluginName() const;
     QString basePath() const;
 
+    bool hasRemoteEntryPoint() const;
+
 private:
     QString mId;
     QString mTitle;
