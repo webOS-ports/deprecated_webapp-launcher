@@ -20,10 +20,43 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "extensionmanager.js" as ExtensionManager
 import LunaNext 0.1
-Flickable {
-    id: webViewContainer
+import Connman 0.2
 
-    anchors.fill: parent
+Flickable {
+   id: webViewContainer
+
+   anchors.fill: parent
+
+   NetworkManager {
+       id: networkManager
+
+       property string oldState: "unknown"
+
+       onStateChanged: {
+           // When we are online again reload the web view in order to start the application
+           // which is still visible to the user
+           if (oldState !== networkManager.state && networkManager.state === "online")
+               webView.reload();
+       }
+   }
+
+    Rectangle {
+        id: offlinePanel
+
+        color: "white"
+        visible: webApp.internetConnectivityRequired && networkManager.state !== "online"
+        anchors.fill: parent
+
+        z: 10
+
+        Text {
+            anchors.centerIn: parent
+            color: "black"
+            text: "Internet connectivity is required but not available"
+            font.pixelSize: 20
+            font.family: "Prelude"
+        }
+    }
 
     WebView {
         id: webView

@@ -47,6 +47,7 @@ class WebApplication : public QObject
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool privileged READ privileged CONSTANT)
     Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
+    Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
 
 public:
     WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
@@ -66,6 +67,7 @@ public:
     bool headless() const;
     bool privileged() const;
     QString trustScope() const;
+    bool internetConnectivityRequired() const;
 
     WebApplicationPlugin* plugin() const;
 
