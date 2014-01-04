@@ -21,6 +21,7 @@ import QtWebKit.experimental 1.0
 import "extensionmanager.js" as ExtensionManager
 import LunaNext 0.1
 import Connman 0.2
+import "."
 
 Flickable {
    id: webViewContainer
@@ -66,6 +67,10 @@ Flickable {
 
         url: webAppUrl
 
+        UserAgent {
+            id: userAgent
+        }
+
         experimental.preferences.navigatorQtObjectEnabled: true
         experimental.preferences.localStorageEnabled: true
         experimental.preferences.offlineWebApplicationCacheEnabled: true
@@ -78,6 +83,8 @@ Flickable {
         experimental.preferences.fixedFontFamily: "Courier new"
         experimental.preferences.serifFontFamily: "Times New Roman"
         experimental.preferences.cursiveFontFamily: "Prelude"
+
+        experimental.userAgent: userAgent.defaultUA
 
         onNavigationRequested: {
             var action = WebView.AcceptRequest;
@@ -102,6 +109,8 @@ Flickable {
                 Qt.openUrlExternally(url);
                 return;
             }
+
+            webView.experimental.userAgent = userAgent.getUAString(url);
         }
 
         property variant userScripts: []

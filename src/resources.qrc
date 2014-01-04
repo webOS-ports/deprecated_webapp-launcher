@@ -6,5 +6,7 @@
         <file>qml/ApplicationContainer.qml</file>
         <file>extensions/PalmServiceBridge.js</file>
         <file>extensions/PalmSystem.js</file>
+        <file>qml/ua-overrides.js</file>
+        <file>qml/UserAgent.qml</file>
     </qresource>
 </RCC>
