@@ -79,6 +79,31 @@ Flickable {
         experimental.preferences.serifFontFamily: "Times New Roman"
         experimental.preferences.cursiveFontFamily: "Prelude"
 
+        onNavigationRequested: {
+            var action = WebView.AcceptRequest;
+            var url = request.url.toString();
+
+            if (webApp.urlsAllowed && webApp.urlsAllowed.length !== 0) {
+                action = WebView.IgnoreRequest;
+                for (var i = 0; i < webApp.urlsAllowed.length; ++i) {
+                    var pattern = webApp.urlsAllowed[i];
+                    if (url.match(pattern)) {
+                        action = WebView.AcceptRequest;
+                        break;
+                    }
+                }
+            }
+
+            request.action = action;
+
+            // If we're not handling the URL forward it to be opened within the system
+            // default web browser in a safe environment
+            if (request.action === WebView.IgnoreRequest) {
+                Qt.openUrlExternally(url);
+                return;
+            }
+        }
+
         property variant userScripts: []
         onUserScriptsChanged: {
             // Only inject our user script for the webOS API when we have a patched

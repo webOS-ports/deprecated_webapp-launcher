@@ -242,4 +242,9 @@ bool WebApplication::internetConnectivityRequired() const
     return mDescription.internetConnectivityRequired();
 }
 
+QStringList WebApplication::urlsAllowed() const
+{
+    return mDescription.urlsAllowed();
+}
+
 } // namespace luna
