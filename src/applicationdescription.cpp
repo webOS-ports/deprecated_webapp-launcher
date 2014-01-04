@@ -17,6 +17,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QFile>
 #include <QDebug>
 
@@ -41,7 +42,8 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mPluginName(other.pluginName()),
     mApplicationBasePath(other.basePath()),
     mFlickable(other.flickable()),
-    mInternetConnectivityRequired(other.internetConnectivityRequired())
+    mInternetConnectivityRequired(other.internetConnectivityRequired()),
+    mUrlsAllowed(other.urlsAllowed())
 {
 }
 
@@ -102,6 +104,16 @@ void ApplicationDescription::initializeFromData(const QString &data)
     if (mIcon.isEmpty() || !mIcon.isLocalFile() || !QFile::exists(mIcon.toLocalFile()))
         mIcon = QUrl("qrc:///qml/images/default-app-icon.png");
 
+    if (rootObject.contains("urlsAllowed") && rootObject.value("urlsAllowed").isArray()) {
+        QJsonArray urlsAllowed = rootObject.value("urlsAllowed").toArray();
+        for (int n = 0; n < urlsAllowed.size(); n++) {
+            if (!urlsAllowed[n].isString())
+                continue;
+
+            mUrlsAllowed.append(urlsAllowed[n].toString());
+        }
+    }
+
     if (rootObject.contains("plugin") && rootObject.value("plugin").isString())
         mPluginName = rootObject.value("plugin").toString();
 }
@@ -110,17 +122,25 @@ QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
 {
     QUrl entryPointAsUrl(entryPoint);
 
-    if (entryPointAsUrl.scheme() != "file" && entryPointAsUrl.scheme() != "") {
+    if (entryPointAsUrl.scheme() == "file" ||
+        entryPointAsUrl.scheme() == "http" ||
+        entryPointAsUrl.scheme() == "https")
+        return entryPointAsUrl;
+
+    if (entryPointAsUrl.scheme() != "") {
         qWarning("Entry point %s for application %s is invalid",
                  entryPoint.toUtf8().constData(),
                  mId.toUtf8().constData());
         return QUrl("");
     }
 
-    if (entryPointAsUrl.scheme() == "file")
-        return entryPointAsUrl;
-
     return QUrl(QString("file://%1/%2").arg(mApplicationBasePath).arg(entryPoint));
+}
+
+bool ApplicationDescription::hasRemoteEntryPoint() const
+{
+    return mEntryPoint.scheme() == "http" ||
+           mEntryPoint.scheme() == "https";
 }
 
 QString ApplicationDescription::id() const
@@ -171,6 +191,11 @@ bool ApplicationDescription::flickable() const
 bool ApplicationDescription::internetConnectivityRequired() const
 {
     return mInternetConnectivityRequired;
+}
+
+QStringList ApplicationDescription::urlsAllowed() const
+{
+    return mUrlsAllowed;
 }
 
 }

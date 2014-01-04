@@ -21,6 +21,7 @@
 #include <QObject>
 #include <QString>
 #include <QUrl>
+#include <QStringList>
 
 namespace luna
 {
@@ -55,9 +56,12 @@ public:
     bool headless() const;
     bool flickable() const;
     bool internetConnectivityRequired() const;
+    QStringList urlsAllowed() const;
 
     QString pluginName() const;
     QString basePath() const;
+
+    bool hasRemoteEntryPoint() const;
 
 private:
     QString mId;
@@ -70,6 +74,7 @@ private:
     QString mPluginName;
     bool mFlickable;
     bool mInternetConnectivityRequired;
+    QStringList mUrlsAllowed;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);
