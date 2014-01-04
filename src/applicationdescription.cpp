@@ -80,6 +80,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
     if (rootObject.contains("main") && rootObject.value("main").isString())
         mEntryPoint = locateEntryPoint(rootObject.value("main").toString());
 
+    if (mEntryPoint.scheme() != "file")
+        mTrustScope = TrustScopeRemote;
+
     if (rootObject.contains("noWindow") && rootObject.value("noWindow").isBool())
         mHeadless = rootObject.value("noWindow").toBool();
 

@@ -46,6 +46,7 @@ public:
 
     enum TrustScope {
         TrustScopeSystem,
+        TrustScopeRemote
     };
 
     TrustScope trustScope() const;

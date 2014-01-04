@@ -10,5 +10,7 @@
         <file>qml/images/loading-bg.png</file>
         <file>qml/images/loading-glow.png</file>
         <file>qml/images/default-app-icon.png</file>
+        <file>qml/ua-overrides.js</file>
+        <file>qml/UserAgent.qml</file>
     </qresource>
 </RCC>

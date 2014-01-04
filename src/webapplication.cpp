@@ -314,6 +314,8 @@ QString WebApplication::trustScope() const
     switch (mDescription.trustScope()) {
     case ApplicationDescription::TrustScopeSystem:
         return QString("system");
+    case ApplicationDescription::TrustScopeRemote:
+        return QString("remote");
     }
 
     return QString("unknown");
