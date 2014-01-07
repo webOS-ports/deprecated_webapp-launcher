@@ -92,7 +92,7 @@ int main(int argc, char **argv)
         goto cleanup;
     }
     if (option_debug)
-        setenv("QTWEBKIT_INSPECTOR_SERVER", "11222", 0);
+        setenv("QTWEBKIT_INSPECTOR_SERVER", "1122", 0);
 
     if (!option_appinfo) {
         g_warning("No application manifest supplied");
