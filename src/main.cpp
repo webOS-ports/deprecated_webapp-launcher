@@ -25,15 +25,15 @@
 #define XDG_RUNTIME_DIR_DEFAULT "/tmp/luna-session"
 
 static gchar *option_appinfo = NULL;
-static gchar *option_url = NULL;
 static gchar *option_parameters = NULL;
-static gchar *option_window_type = NULL;
 static gboolean option_debug = FALSE;
 static gboolean option_version = FALSE;
 
 static GOptionEntry options[] = {
     { "appinfo", 'a', 0, G_OPTION_ARG_STRING, &option_appinfo,
         "Application manifest of the application to start" },
+    { "parameters", 'p', 0, G_OPTION_ARG_STRING, &option_parameters,
+        "Launch parameters passed to the application" },
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &option_debug,
         "Enable debugging modus. This will start the webkit inspector "
         "on http://localhost:1122/" },
@@ -103,9 +103,7 @@ int main(int argc, char **argv)
 
 cleanup:
     g_free(option_appinfo);
-    g_free(option_url);
     g_free(option_parameters);
-    g_free(option_window_type);
 
     return 0;
 }
