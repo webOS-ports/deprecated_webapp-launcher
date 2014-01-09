@@ -102,6 +102,8 @@ void WebAppLauncher::launchApp(const QString &manifestPath, const QString &param
                                              desc, parameters, processId);
     connect(app, SIGNAL(closed()), this, SLOT(onApplicationWindowClosed()));
 
+    this->setQuitOnLastWindowClosed(false);
+
     mLaunchedApp = app;
 
     this->exec();
