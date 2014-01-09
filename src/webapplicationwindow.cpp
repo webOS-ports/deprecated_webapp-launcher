@@ -231,7 +231,7 @@ void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QSt
 void WebApplicationWindow::createDefaultExtensions()
 {
     addExtension(new PalmSystemExtension(this));
-    addExtension(new PalmServiceBridgeExtension(this));
+    // addExtension(new PalmServiceBridgeExtension(this));
 
     if (!mApplication->plugin())
         return;

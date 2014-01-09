@@ -1,0 +1,14 @@
+{
+    "role": {
+        "exeName":"@WEBOS_INSTALL_SBINDIR@/webapp-launcher",
+        "type": "privileged",
+        "allowedNames": ["org.webosports.webapp-*",""]
+    },
+    "permissions": [
+        {
+            "service":"org.webosports.webapp-*",
+            "inbound":["*"],
+            "outbound":["*"]
+        }
+    ]
+}
