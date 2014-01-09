@@ -34,6 +34,14 @@ PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow
     mApplicationWindow(applicationWindow)
 {
     applicationWindow->registerUserScript(QUrl("qrc:///extensions/PalmSystem.js"));
+
+    connect(applicationWindow->application(), SIGNAL(parametersChanged()), this, SLOT(onParametersChanged()));
+}
+
+void PalmSystemExtension::onParametersChanged()
+{
+    mAppEnvironment->executeScript(QString("__PalmSystem.launchParams = \"%1\";")
+                                   .arg(mApplicationWindow->application()->parameters()));
 }
 
 void PalmSystemExtension::stageReady()

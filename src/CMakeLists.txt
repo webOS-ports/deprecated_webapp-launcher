@@ -4,7 +4,8 @@ include_directories(
     ${GLIB2_INCLUDE_DIRS}
     ${LS2_INCLUDE_DIRS}
     ${PBNJSON_C_INCLUDE_DIRS}
-    ${LUNA_SYSMGR_COMMON_INCLUDE_DIRS})
+    ${LUNA_SYSMGR_COMMON_INCLUDE_DIRS}
+    ${WEBOS_APPLICATION_INCLUDE_DIRS})
 
 set(SOURCES
     main.cpp
@@ -43,7 +44,8 @@ target_link_libraries(webapp-launcher
     ${GLIB2_LIBRARIES}
     ${SYSTEMD_DAEMON_LIBRARIES}
     ${PBNJSON_C_LIBRARIES}
-    ${LUNA_SYSMGR_COMMON_LIBRARIES})
+    ${LUNA_SYSMGR_COMMON_LIBRARIES}
+    ${WEBOS_APPLICATION_LIBRARIES})
 
 webos_build_program(ADMIN)
 webos_build_system_bus_files()

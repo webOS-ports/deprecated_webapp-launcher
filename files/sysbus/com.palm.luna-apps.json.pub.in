@@ -2,7 +2,7 @@
     "role": {
         "exeName":"@WEBOS_INSTALL_SBINDIR@/webapp-launcher",
         "type": "privileged",
-        "allowedNames": ["com.palm.luna-*"]
+        "allowedNames": ["com.palm.luna-*", ""]
     },
     "permissions": [
         {

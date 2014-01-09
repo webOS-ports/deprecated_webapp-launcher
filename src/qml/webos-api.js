@@ -112,9 +112,3 @@ _webOS.execSync = function(extensionName, functionName, parameters) {
 }
 
 var unusedCallback = function() { }
-
-_webOS.relaunch = function(parameters) {
-    __PalmSystem.launchParams = parameters;
-    if (Mojo && Mojo.relaunch)
-        Mojo.relaunch();
-}

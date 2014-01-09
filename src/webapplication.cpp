@@ -21,7 +21,7 @@
 #include <QJsonDocument>
 
 #include <QtWebKit/private/qquickwebview_p.h>
-#ifndef WITH_UNMODIFIED_QTWEBKIT
+#ifndef WITH_UNMODIFIED_QTWEBKI
 #include <QtWebKit/private/qwebnewpagerequest_p.h>
 #endif
 
@@ -36,8 +36,21 @@
 
 #include <Settings.h>
 
+#include <webos_application.h>
+
+#include <sys/types.h>
+#include <unistd.h>
+
 namespace luna
 {
+
+struct webos_application_event_handlers event_handlers = {
+    .activate = NULL,
+    .deactivate = NULL,
+    .suspend = NULL,
+    .relaunch = WebApplication::relaunch_cb,
+    .lowmemory = NULL
+};
 
 WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
                                const ApplicationDescription& desc, const QString& parameters,
@@ -54,6 +67,9 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mPrivileged(false),
     mPlugin(0)
 {
+    webos_application_init(desc.id().toUtf8().constData(), &event_handlers, this);
+    webos_application_attach(g_main_loop_new(g_main_context_default(), TRUE));
+
     loadPlugin();
 
     // Only system applications with a specific id prefix are privileged to access
@@ -71,6 +87,13 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
 
 WebApplication::~WebApplication()
 {
+}
+
+void WebApplication::relaunch_cb(const char *parameters, void *user_data)
+{
+    WebApplication *webapp = static_cast<WebApplication*>(user_data);
+    QString params(parameters);
+    webapp->relaunch(params);
 }
 
 void WebApplication::loadPlugin()
@@ -107,7 +130,9 @@ void WebApplication::relaunch(const QString &parameters)
     qDebug() << __PRETTY_FUNCTION__ << "Relaunching application" << mDescription.id() << "with parameters" << parameters;
 
     mParameters = parameters;
-    mMainWindow->executeScript(QString("_webOS.relaunch(\"%1\");").arg(parameters));
+    emit parametersChanged();
+
+    mMainWindow->executeScript(QString("Mojo.relaunch();"));
 }
 
 #ifndef WITH_UNMODIFIED_QTWEBKIT

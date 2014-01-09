@@ -38,6 +38,7 @@ pkg_check_modules(LS2 luna-service2 REQUIRED)
 pkg_check_modules(SYSTEMD_DAEMON libsystemd-daemon REQUIRED)
 pkg_check_modules(PBNJSON_C pbnjson_c REQUIRED)
 pkg_check_modules(LUNA_SYSMGR_COMMON LunaSysMgrCommon REQUIRED)
+pkg_check_modules(WEBOS_APPLICATION webos-application REQUIRED)
 
 set(WITH_UNMODIFIED_QTWEBKIT FALSE CACHE BOOL "Set to TRUE to compiled with an unmodified qtwebkit version")
 if(WITH_UNMODIFIED_QTWEBKIT)

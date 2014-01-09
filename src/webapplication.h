@@ -43,7 +43,7 @@ class WebApplication : public QObject
     Q_PROPERTY(QUrl icon READ icon CONSTANT)
     Q_PROPERTY(QString identifier READ identifier CONSTANT)
     Q_PROPERTY(int activityId READ activityId CONSTANT)
-    Q_PROPERTY(QString parameters READ parameters CONSTANT)
+    Q_PROPERTY(QString parameters READ parameters NOTIFY parametersChanged)
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool privileged READ privileged CONSTANT)
     Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
@@ -55,8 +55,6 @@ public:
                    const ApplicationDescription& desc, const QString& parameters,
                    const QString& processId, QObject *parent = 0);
     virtual ~WebApplication();
-
-    void relaunch(const QString& parameters);
 
     QString id() const;
     QString processId() const;
@@ -78,12 +76,17 @@ public:
 
     void changeActivityFocus(bool focus);
 
+    static void relaunch_cb(const char *parameters, void *user_data);
+    void relaunch(const QString &parameters);
+
 #ifndef WITH_UNMODIFIED_QTWEBKIT
     void createWindow(QWebNewPageRequest *request);
 #endif
 
 signals:
     void closed();
+
+    void parametersChanged();
 
 public slots:
     void windowClosed();
