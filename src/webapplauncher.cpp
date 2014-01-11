@@ -118,8 +118,7 @@ void WebAppLauncher::onAboutToQuit()
 
 void WebAppLauncher::onApplicationWindowClosed()
 {
-    WebApplication *app = static_cast<WebApplication*>(sender());
-    delete app;
+    quit();
 }
 
 } // namespace luna
