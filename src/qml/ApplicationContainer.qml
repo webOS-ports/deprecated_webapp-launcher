@@ -113,30 +113,17 @@ Flickable {
             webView.experimental.userAgent = userAgent.getUAString(url);
         }
 
-        property variant userScripts: []
-        onUserScriptsChanged: {
-            // Only inject our user script for the webOS API when we have a patched
-            // qtwebkit otherwise it's up to the user to link the app to the required
-            // javascript file in it's header
-            if (experimental.hasOwnProperty('userScriptsInjectAtStart') &&
-                experimental.hasOwnProperty('userScriptsForAllFrames')) {
-                experimental.userScripts = webView.userScripts;
-                experimental.userScriptsInjectAtStart = true;
-                experimental.userScriptsForAllFrames = true;
-            }
-            else {
-                console.log("WARNING: webOS API is not going to be installed for apps !!!!");
-                console.log("WARNING: If you still want to use the webOS API you have to include");
-                console.log("WARNING: the required scripts on your own.");
-            }
-        }
-
         Component.onCompleted: {
             // Only when we have a system application we enable the webOS API and the
             // PalmServiceBridge to avoid remote applications accessing unwanted system
             // internals
             if (webApp.trustScope === "system") {
-                webView.userScripts = webAppWindow.userScripts;
+                if (experimental.hasOwnProperty('userScriptsInjectAtStart') &&
+                    experimental.hasOwnProperty('userScriptsForAllFrames')) {
+                    experimental.userScripts = webAppWindow.userScripts;
+                    experimental.userScriptsInjectAtStart = true;
+                    experimental.userScriptsForAllFrames = true;
+                }
 
                 if (experimental.preferences.hasOwnProperty("palmServiceBridgeEnabled"))
                     experimental.preferences.palmServiceBridgeEnabled = true;
