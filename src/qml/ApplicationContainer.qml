@@ -128,6 +128,9 @@ Flickable {
 
             if (experimental.preferences.hasOwnProperty("logsPageMessagesToSystemConsole"))
                 experimental.preferences.logsPageMessagesToSystemConsole = true;
+
+            if (experimental.preferences.hasOwnProperty("suppressIncrementalRendering"))
+                experimental.preferences.suppressIncrementalRendering = true;
         }
 
         experimental.onMessageReceived: {
