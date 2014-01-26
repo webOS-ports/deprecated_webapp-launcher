@@ -57,6 +57,7 @@ public:
     bool flickable() const;
     bool internetConnectivityRequired() const;
     QStringList urlsAllowed() const;
+    QString userAgent() const;
 
     QString pluginName() const;
     QString basePath() const;
@@ -75,6 +76,7 @@ private:
     bool mFlickable;
     bool mInternetConnectivityRequired;
     QStringList mUrlsAllowed;
+    QString mUserAgent;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);

@@ -43,7 +43,8 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mApplicationBasePath(other.basePath()),
     mFlickable(other.flickable()),
     mInternetConnectivityRequired(other.internetConnectivityRequired()),
-    mUrlsAllowed(other.urlsAllowed())
+    mUrlsAllowed(other.urlsAllowed()),
+    mUserAgent(other.userAgent())
 {
 }
 
@@ -52,7 +53,8 @@ ApplicationDescription::ApplicationDescription(const QString &data, const QStrin
     mFlickable(false),
     mInternetConnectivityRequired(false),
     mApplicationBasePath(applicationBasePath),
-    mTrustScope(ApplicationDescription::TrustScopeSystem)
+    mTrustScope(ApplicationDescription::TrustScopeSystem),
+    mUserAgent("")
 {
     initializeFromData(data);
 }
@@ -116,6 +118,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
     if (rootObject.contains("plugin") && rootObject.value("plugin").isString())
         mPluginName = rootObject.value("plugin").toString();
+
+    if (rootObject.contains("userAgent") && rootObject.value("userAgent").isString())
+        mUserAgent = rootObject.value("userAgent").toString();
 }
 
 QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
@@ -196,6 +201,11 @@ bool ApplicationDescription::internetConnectivityRequired() const
 QStringList ApplicationDescription::urlsAllowed() const
 {
     return mUrlsAllowed;
+}
+
+QString ApplicationDescription::userAgent() const
+{
+    return mUserAgent;
 }
 
 }

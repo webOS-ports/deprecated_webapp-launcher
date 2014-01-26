@@ -49,6 +49,7 @@ class WebApplication : public QObject
     Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
     Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
     Q_PROPERTY(QStringList urlsAllowed READ urlsAllowed CONSTANT)
+    Q_PROPERTY(QString userAgent READ userAgent CONSTANT)
 
 public:
     WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
@@ -69,6 +70,7 @@ public:
     bool internetConnectivityRequired() const;
     QStringList urlsAllowed() const;
     bool hasRemoteEntryPoint() const;
+    QString userAgent() const;
 
     WebApplicationPlugin* plugin() const;
 

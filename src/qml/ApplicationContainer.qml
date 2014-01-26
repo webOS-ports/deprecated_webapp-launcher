@@ -67,10 +67,6 @@ Flickable {
 
         url: webAppUrl
 
-        UserAgent {
-            id: userAgent
-        }
-
         experimental.preferences.navigatorQtObjectEnabled: true
         experimental.preferences.localStorageEnabled: true
         experimental.preferences.offlineWebApplicationCacheEnabled: true
@@ -84,7 +80,7 @@ Flickable {
         experimental.preferences.serifFontFamily: "Times New Roman"
         experimental.preferences.cursiveFontFamily: "Prelude"
 
-        experimental.userAgent: userAgent.defaultUA
+        experimental.userAgent: webApp.userAgent
 
         onNavigationRequested: {
             var action = WebView.AcceptRequest;
@@ -109,8 +105,6 @@ Flickable {
                 Qt.openUrlExternally(url);
                 return;
             }
-
-            webView.experimental.userAgent = userAgent.getUAString(url);
         }
 
         Component.onCompleted: {

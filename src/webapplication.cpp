@@ -277,4 +277,9 @@ bool WebApplication::hasRemoteEntryPoint() const
     return mDescription.hasRemoteEntryPoint();
 }
 
+QString WebApplication::userAgent() const
+{
+    return mDescription.userAgent();
+}
+
 } // namespace luna
