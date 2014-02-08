@@ -28,6 +28,9 @@ Flickable {
 
    anchors.fill: parent
 
+   property int numRestarts: 0
+   property int maxRestarts: 3
+
    NetworkManager {
        id: networkManager
 
@@ -151,10 +154,18 @@ Flickable {
 
         Connections {
             target: webView.experimental
-
             onProcessDidCrash: {
-                console.log("ERROR: The web process has crashed. Restart it ...");
-                webView.reload();
+                if (numRestarts < maxRestarts) {
+                    console.log("ERROR: The web process has crashed. Restart it ...");
+                    webView.url = webAppUrl;
+                    webView.reload();
+                    numRestarts += 1;
+                }
+                else {
+                    console.log("CRITICAL: restarted application " + numRestarts
+                                + " times. Closing it now");
+                    Qt.quit();
+                }
             }
         }
     }

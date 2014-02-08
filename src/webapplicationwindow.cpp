@@ -83,6 +83,10 @@ void WebApplicationWindow::createAndSetup()
     mEngine.rootContext()->setContextProperty("webAppWindow", this);
     mEngine.rootContext()->setContextProperty("webAppUrl", mUrl);
 
+    connect(&mEngine, &QQmlEngine::quit, [=]() {
+        mWindow->close();
+    });
+
     QQmlComponent windowComponent(&mEngine,
         QUrl(QString("qrc:///qml/%1.qml").arg(mHeadless ? "ApplicationContainer" : "Window")));
     if (windowComponent.isError()) {
