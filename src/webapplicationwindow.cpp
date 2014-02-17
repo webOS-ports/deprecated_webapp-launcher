@@ -28,6 +28,8 @@
 #include <QJsonObject>
 #include <QTimer>
 
+#include <QScreen>
+
 #include <Settings.h>
 
 #include "applicationdescription.h"
@@ -101,6 +103,8 @@ void WebApplicationWindow::createAndSetup()
     if (!mHeadless) {
         mWindow = static_cast<QQuickWindow*>(mRootItem);
         mWindow->installEventFilter(this);
+
+        mWindow->reportContentOrientationChange(QGuiApplication::primaryScreen()->primaryOrientation());
 
         mWindow->setSurfaceType(QSurface::OpenGLSurface);
         QSurfaceFormat surfaceFormat = mWindow->format();
