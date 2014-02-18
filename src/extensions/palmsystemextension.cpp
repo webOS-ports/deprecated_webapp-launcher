@@ -40,7 +40,7 @@ PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow
 
 void PalmSystemExtension::onParametersChanged()
 {
-    mAppEnvironment->executeScript(QString("__PalmSystem.launchParams = \"%1\";")
+    mAppEnvironment->executeScript(QString("__PalmSystem.launchParams = '%1';")
                                    .arg(mApplicationWindow->application()->parameters()));
 }
 
