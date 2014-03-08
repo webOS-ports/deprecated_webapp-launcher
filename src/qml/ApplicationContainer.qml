@@ -62,11 +62,39 @@ Flickable {
         }
     }
 
+    Connections {
+        target: Qt.inputMethod
+        onVisibleChanged: {
+            webView.experimental.evaluateJavaScript("if (window.Mojo && window.Mojo.keyboardShown) {" +
+                                                    "window.Mojo.keyboardShown(" + Qt.inputMethod.visible + ");}");
+
+            var positiveSpace = {
+                width: parent.width,
+                height: parent.height - Qt.inputMethod.keyboardRectangle.height
+            };
+
+            webView.experimental.evaluateJavaScript("if (window.Mojo && window.Mojo.positiveSpaceChanged) {" +
+                                                    "window.Mojo.positiveSpaceChanged(" + positiveSpace.width +
+                                                    "," + positiveSpace.height + ");}");
+
+            if (Qt.inputMethod.visible) {
+                keyboardContainer.height = Qt.inputMethod.keyboardRectangle.height;
+            }
+            else {
+                keyboardContainer.height = 0;
+            }
+        }
+    }
+
     WebView {
         id: webView
         objectName: "webView"
 
-        anchors.fill: parent
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: keyboardContainer.top
 
         url: webAppUrl
 
@@ -168,5 +196,13 @@ Flickable {
                 }
             }
         }
+    }
+
+    Item {
+        id: keyboardContainer
+        height: 0
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 }
