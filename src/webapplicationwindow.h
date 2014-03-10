@@ -106,6 +106,7 @@ private:
     void createDefaultExtensions();
     void setWindowProperty(const QString &name, const QVariant &value);
     void setupPage();
+    void notifyAppAboutFocusState(bool focus);
 };
 
 } // namespace luna

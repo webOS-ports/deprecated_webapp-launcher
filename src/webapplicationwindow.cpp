@@ -159,6 +159,13 @@ void WebApplicationWindow::setupPage()
     mWebView->setZoomFactor(zoomFactor);
 }
 
+void WebApplicationWindow::notifyAppAboutFocusState(bool focus)
+{
+    qDebug() << "DEBUG: We become" << (focus ? "focused" : "unfocused");
+    QString action = focus ? "stageActivated" : "stageDeactivated";
+    executeScript(QString("if (window.Mojo && Mojo.%1) Mojo.%1()").arg(action));
+}
+
 void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
 {
     switch (request->status()) {
@@ -277,8 +284,10 @@ bool WebApplicationWindow::eventFilter(QObject *object, QEvent *event)
             QTimer::singleShot(0, this, SLOT(onClosed()));
             break;
         case QEvent::FocusIn:
+            notifyAppAboutFocusState(true);
             break;
         case QEvent::FocusOut:
+            notifyAppAboutFocusState(false);
             break;
         default:
             break;
