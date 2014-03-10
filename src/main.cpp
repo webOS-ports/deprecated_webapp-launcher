@@ -17,6 +17,9 @@
 
 #include <QDebug>
 #include <QStringList>
+#include <QTime>
+#include <QtGlobal>
+
 #include <glib.h>
 
 #include "webapplauncher.h"
@@ -42,10 +45,36 @@ static GOptionEntry options[] = {
     { NULL },
 };
 
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString timeStr = QTime::currentTime().toString("hh:mm:ss.zzz");
+
+    switch(type)
+    {
+    case QtDebugMsg:
+        fprintf(stdout, "DEBUG: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        break;
+    case QtWarningMsg:
+        fprintf(stdout, "WARNING: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        break;
+    case QtCriticalMsg:
+        fprintf(stdout, "CRITICAL: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        break;
+    case QtFatalMsg:
+        fprintf(stdout, "FATAL: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        break;
+    default:
+        fprintf(stdout, "INFO: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        break;
+    }
+}
+
 int main(int argc, char **argv)
 {
     GError *error = NULL;
     GOptionContext *context;
+
+    qInstallMessageHandler(messageHandler);
 
     if (qgetenv("DISPLAY").isEmpty()) {
         setenv("EGL_PLATFORM", "wayland", 0);
