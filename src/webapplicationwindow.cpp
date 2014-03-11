@@ -142,6 +142,8 @@ void WebApplicationWindow::createAndSetup()
 
 void WebApplicationWindow::onShowWindowTimeout()
 {
+    qDebug() << __PRETTY_FUNCTION__;
+
     // we got no stage ready call yet so go forward showing the window
     stageReady();
 }
@@ -158,8 +160,12 @@ void WebApplicationWindow::setupPage()
 
     mWebView->setZoomFactor(zoomFactor);
 
+    show();
+
+    // We need to finish the stage preparation in case of a remote entry point
+    // otherwise it will never stop loading
     if (mApplication->hasRemoteEntryPoint())
-        show();
+        stageReady();
 }
 
 void WebApplicationWindow::notifyAppAboutFocusState(bool focus)
@@ -194,10 +200,6 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
     // If we don't got stageReady() start a timeout to wait for it
     else if (mStagePreparing && !mStageReady && !mShowWindowTimer.isActive())
         mShowWindowTimer.start(3000);
-    // If we got stageReady() already while we were still loading the page we can now
-    // safely show the window
-    else if (!mStagePreparing && mStageReady && !mWindow->isVisible())
-        show();
 }
 
 #ifndef WITH_UNMODIFIED_QTWEBKIT
@@ -304,6 +306,7 @@ bool WebApplicationWindow::eventFilter(QObject *object, QEvent *event)
 void WebApplicationWindow::stagePreparing()
 {
     mStagePreparing = true;
+    emit readyChanged();
 }
 
 void WebApplicationWindow::stageReady()
@@ -311,8 +314,9 @@ void WebApplicationWindow::stageReady()
     mStagePreparing = false;
     mStageReady = true;
 
+    emit readyChanged();
+
     mShowWindowTimer.stop();
-    show();
 }
 
 void WebApplicationWindow::show()
@@ -369,6 +373,11 @@ bool WebApplicationWindow::headless() const
 QList<QUrl> WebApplicationWindow::userScripts() const
 {
     return mUserScripts;
+}
+
+bool WebApplicationWindow::ready() const
+{
+    return mStageReady && !mStagePreparing;
 }
 
 } // namespace luna

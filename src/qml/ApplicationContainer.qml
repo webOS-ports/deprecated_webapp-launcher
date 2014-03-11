@@ -86,10 +86,16 @@ Flickable {
         }
     }
 
+    LoadingBackground {
+        id: loadingBackgrounds
+        anchors.fill: parent
+        z: 100
+        state: webAppWindow.ready ? "hidden" : "visible"
+    }
+
     WebView {
         id: webView
         objectName: "webView"
-
 
         anchors.left: parent.left
         anchors.right: parent.right

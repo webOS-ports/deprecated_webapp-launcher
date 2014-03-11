@@ -94,6 +94,8 @@ void ApplicationDescription::initializeFromData(const QString &data)
         if (!iconPath.startsWith("file://"))
             iconPath.prepend("file://");
 
+        qDebug() << "Appication icon path is" << iconPath;
+
         mIcon = iconPath;
     }
 

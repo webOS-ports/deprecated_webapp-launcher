@@ -42,6 +42,7 @@ class WebApplicationWindow : public ApplicationEnvironment
     Q_OBJECT
     Q_PROPERTY(WebApplication *application READ application)
     Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
+    Q_PROPERTY(bool ready READ ready NOTIFY readyChanged);
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
@@ -56,6 +57,7 @@ public:
     void show();
     void hide();
 
+    bool ready() const;
     bool headless() const;
     bool keepAlive() const;
     QQuickWebView *webView() const;
@@ -71,6 +73,7 @@ signals:
     void javaScriptExecNeeded(const QString &script);
     void extensionWantsToBeAdded(const QString &name, QObject *object);
     void closed();
+    void readyChanged();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
