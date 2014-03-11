@@ -157,6 +157,9 @@ void WebApplicationWindow::setupPage()
         zoomFactor = Settings::LunaSettings()->layoutScaleCompat;
 
     mWebView->setZoomFactor(zoomFactor);
+
+    if (mApplication->hasRemoteEntryPoint())
+        show();
 }
 
 void WebApplicationWindow::notifyAppAboutFocusState(bool focus)
@@ -182,11 +185,12 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
     Q_FOREACH(BaseExtension *extension, mExtensions.values())
         extension->initialize();
 
-    if (mHeadless)
+    // If we're a headless app we don't show the window and in case of an
+    // application with an remote entry point it's already visible at
+    // this point
+    if (mHeadless || mApplication->hasRemoteEntryPoint())
         return;
 
-    if (mApplication->hasRemoteEntryPoint())
-        show();
     // If we don't got stageReady() start a timeout to wait for it
     else if (mStagePreparing && !mStageReady && !mShowWindowTimer.isActive())
         mShowWindowTimer.start(3000);
