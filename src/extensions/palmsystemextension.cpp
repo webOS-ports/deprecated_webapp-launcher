@@ -46,38 +46,46 @@ void PalmSystemExtension::onParametersChanged()
 
 void PalmSystemExtension::stageReady()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mApplicationWindow->stageReady();
 }
 
 void PalmSystemExtension::activate()
 {
+    qDebug() << __PRETTY_FUNCTION__;
 }
 
 void PalmSystemExtension::deactivate()
 {
+    qDebug() << __PRETTY_FUNCTION__;
 }
 
 void PalmSystemExtension::stagePreparing()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mApplicationWindow->stagePreparing();
 }
 
 void PalmSystemExtension::show()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mApplicationWindow->show();
 }
 
 void PalmSystemExtension::hide()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mApplicationWindow->hide();
 }
 
 void PalmSystemExtension::setWindowProperties(const QString &properties)
 {
+    qDebug() << __PRETTY_FUNCTION__ << properties;
 }
 
 void PalmSystemExtension::enableFullScreenMode(bool enable)
 {
+    qDebug() << __PRETTY_FUNCTION__ << enable;
 }
 
 void PalmSystemExtension::addBannerMessage(int id, const QString &msg,
@@ -96,6 +104,7 @@ void PalmSystemExtension::clearBannerMessages()
 
 void PalmSystemExtension::keepAlive(bool keep)
 {
+    qDebug() << __PRETTY_FUNCTION__ << keep;
     mApplicationWindow->setKeepAlive(keep);
 }
 
@@ -113,6 +122,7 @@ void PalmSystemExtension::registerPropertyChangeHandler(int successCallbackId, i
 
 void PalmSystemExtension::setProperty(const QString &name, const QVariant &value)
 {
+    qDebug() << __PRETTY_FUNCTION__ << name << value;
 }
 
 void PalmSystemExtension::getProperty(int successCallbackId, int errorCallbackId, const QString &name)
@@ -167,6 +177,8 @@ QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, cons
 
 QString PalmSystemExtension::getResource(const QJsonArray& params)
 {
+    qDebug() << __PRETTY_FUNCTION__ << params;
+
     if (params.count() != 2 || !params.at(0).isString())
         return QString("");
 
