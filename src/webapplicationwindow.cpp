@@ -335,6 +335,27 @@ void WebApplicationWindow::hide()
     mWindow->hide();
 }
 
+void WebApplicationWindow::focus()
+{
+    if (!mWindow)
+        return;
+
+    /* When we're closed we have to make sure we're visible before
+     * raising ourself */
+    if (!mWindow->isVisible())
+        mWindow->show();
+
+    mWindow->raise();
+}
+
+void WebApplicationWindow::unfocus()
+{
+    if (!mWindow)
+        return;
+
+    mWindow->lower();
+}
+
 void WebApplicationWindow::executeScript(const QString &script)
 {
     emit javaScriptExecNeeded(script);

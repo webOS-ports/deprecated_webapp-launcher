@@ -53,11 +53,13 @@ void PalmSystemExtension::stageReady()
 void PalmSystemExtension::activate()
 {
     qDebug() << __PRETTY_FUNCTION__;
+    mApplicationWindow->focus();
 }
 
 void PalmSystemExtension::deactivate()
 {
     qDebug() << __PRETTY_FUNCTION__;
+    mApplicationWindow->unfocus();
 }
 
 void PalmSystemExtension::stagePreparing()

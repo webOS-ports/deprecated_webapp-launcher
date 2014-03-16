@@ -56,6 +56,8 @@ public:
 
     void show();
     void hide();
+    void focus();
+    void unfocus();
 
     bool ready() const;
     bool headless() const;
