@@ -59,7 +59,7 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mLauncher(launcher),
     mDescription(desc),
     mProcessId(processId),
-    mIdentifier(mDescription.id() + "-" + mProcessId),
+    mIdentifier(mDescription.id() + " " + mProcessId),
     mActivityId(-1),
     mParameters(parameters),
     mMainWindow(0),

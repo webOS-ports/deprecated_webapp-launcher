@@ -133,7 +133,7 @@ void PalmSystemExtension::getProperty(int successCallbackId, int errorCallbackId
         callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->parameters());
     }
     else if (name == "identifier") {
-        callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->id());
+        callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->identifier());
     }
     else if (name == "activityId") {
         callbackWithoutRemove(successCallbackId, QString("%1").arg(mApplicationWindow->application()->activityId()));
@@ -151,7 +151,7 @@ void PalmSystemExtension::initializeProperties(int successCallbackId, int errorC
     rootObj.insert("timeFormat", QJsonValue(QString("")));
     rootObj.insert("timeZone", QJsonValue(QString("")));
     rootObj.insert("isMinimal", QJsonValue(QString("")));
-    rootObj.insert("identifier", QJsonValue(mApplicationWindow->application()->id()));
+    rootObj.insert("identifier", QJsonValue(mApplicationWindow->application()->identifier()));
     rootObj.insert("version", QJsonValue(QString("")));
     rootObj.insert("screenOrientation", QJsonValue(QString("")));
     rootObj.insert("windowOrientation", QJsonValue(QString("")));
