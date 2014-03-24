@@ -168,6 +168,9 @@ Flickable {
 
             if (experimental.preferences.hasOwnProperty("suppressIncrementalRendering"))
                 experimental.preferences.suppressIncrementalRendering = true;
+
+            if (experimental.preferences.hasOwnProperty("identifier"))
+                experimental.preferences.identifier = webApp.id;
         }
 
         experimental.onMessageReceived: {
