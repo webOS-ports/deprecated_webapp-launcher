@@ -19,7 +19,7 @@ import QtQuick 2.0
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "extensionmanager.js" as ExtensionManager
-import LunaNext 0.1
+import LunaNext.Common 0.1
 import Connman 0.2
 import "."
 
