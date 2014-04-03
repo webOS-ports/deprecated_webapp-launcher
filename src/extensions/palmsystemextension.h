@@ -114,6 +114,7 @@ private:
     WebApplicationWindow *mApplicationWindow;
 
     QString getResource(const QJsonArray& params);
+    QString getIdentifierForFrame(const QJsonArray& params);
 };
 
 } // namespace luna

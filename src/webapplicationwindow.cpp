@@ -303,6 +303,18 @@ bool WebApplicationWindow::eventFilter(QObject *object, QEvent *event)
     return false;
 }
 
+QString WebApplicationWindow::getIdentifierForFrame(const QString& id, const QString& url)
+{
+    QString identifier = mApplication->identifier();
+
+    if (url.startsWith("file:///usr/lib/luna/system/luna-systemui/"))
+        identifier = QString("com.palm.systemui %1").arg(mApplication->processId());
+
+    qDebug() << __PRETTY_FUNCTION__ << "Decided identifier for frame" << id << "is" << identifier;
+
+    return identifier;
+}
+
 void WebApplicationWindow::stagePreparing()
 {
     mStagePreparing = true;

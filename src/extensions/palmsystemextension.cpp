@@ -20,6 +20,7 @@
 #include <QJsonValue>
 #include <QQuickView>
 #include <QFile>
+#include <QUrl>
 
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
@@ -173,6 +174,8 @@ QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, cons
 
     if (funcName == "getResource")
         response = getResource(params);
+    else if (funcName == "getIdentifierForFrame")
+        response = getIdentifierForFrame(params);
 
     return response;
 }
@@ -191,6 +194,19 @@ QString PalmSystemExtension::getResource(const QJsonArray& params)
     QByteArray data = file.readAll();
 
     return QString(data);
+}
+
+QString PalmSystemExtension::getIdentifierForFrame(const QJsonArray &params)
+{
+    qDebug() << __PRETTY_FUNCTION__ << params;
+
+    if (params.count() != 2 || !params.at(0).isString() || !params.at(0).isString())
+        return QString("");
+
+    QString id(params.at(0).toString());
+    QString url(params.at(1).toString());
+
+    return mApplicationWindow->getIdentifierForFrame(id, url);
 }
 
 } // namespace luna

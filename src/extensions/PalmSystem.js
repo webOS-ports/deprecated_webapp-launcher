@@ -142,6 +142,10 @@ PalmSystem.getIdentifier = function() {
     return __PalmSystem.identifier;
 }
 
+PalmSystem.getIdentifierForFrame = function(id, url) {
+    return _webOS.execSync("PalmSystem", "getIdentifierForFrame", [id, url]);
+}
+
 PalmSystem.addBannerMessage = function(msg, params, icon, soundClass, soundFile, duration, doNotSuppress) {
     var id = ++__PalmSystem.bannerMessageCounter;
     _webOS.execWithoutCallback("PalmSystem", "addBannerMessage",

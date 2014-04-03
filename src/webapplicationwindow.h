@@ -71,6 +71,8 @@ public:
     void executeScript(const QString &script);
     void registerUserScript(const QUrl &path);
 
+    QString getIdentifierForFrame(const QString& id, const QString& url);
+
 signals:
     void javaScriptExecNeeded(const QString &script);
     void extensionWantsToBeAdded(const QString &name, QObject *object);
