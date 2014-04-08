@@ -5,7 +5,8 @@ include_directories(
     ${LS2_INCLUDE_DIRS}
     ${PBNJSON_C_INCLUDE_DIRS}
     ${LUNA_SYSMGR_COMMON_INCLUDE_DIRS}
-    ${WEBOS_APPLICATION_INCLUDE_DIRS})
+    ${WEBOS_APPLICATION_INCLUDE_DIRS}
+    ${LUNA_SERVIVCE2_INCLUDE_DIRS})
 
 set(SOURCES
     main.cpp
@@ -15,6 +16,7 @@ set(SOURCES
     webapplicationplugin.cpp
     webapplicationwindow.cpp
     applicationdescription.cpp
+    activity.cpp
     extensions/lunaservicemgr.cpp
     extensions/palmservicebridgeextension.cpp
     extensions/palmsystemextension.cpp)
@@ -26,6 +28,7 @@ set(HEADERS
     webapplicationplugin.h
     webapplicationwindow.h
     applicationdescription.h
+    activity.h
     extensions/lunaservicemgr.h
     extensions/palmservicebridgeextension.h
     extensions/palmsystemextension.h)
@@ -45,7 +48,8 @@ target_link_libraries(webapp-launcher
     ${SYSTEMD_DAEMON_LIBRARIES}
     ${PBNJSON_C_LIBRARIES}
     ${LUNA_SYSMGR_COMMON_LIBRARIES}
-    ${WEBOS_APPLICATION_LIBRARIES})
+    ${WEBOS_APPLICATION_LIBRARIES}
+    ${LUNA_SERVIVCE2_LIBRARIES})
 
 webos_build_program(ADMIN)
 webos_build_system_bus_files()

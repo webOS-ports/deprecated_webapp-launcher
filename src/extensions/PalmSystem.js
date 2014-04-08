@@ -131,7 +131,7 @@ Object.defineProperty(window.PalmSystem, "isActivated", {
 });
 
 Object.defineProperty(window.PalmSystem, "activityId", {
-  get: function() { return __PalmSystem.activityId; }
+  get: function() { return parseInt(_webOS.execSync("PalmSystem", "getActivityId")); }
 });
 
 Object.defineProperty(window.PalmSystem, "phoneRegion", {

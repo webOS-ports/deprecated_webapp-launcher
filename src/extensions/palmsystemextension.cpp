@@ -176,6 +176,8 @@ QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, cons
         response = getResource(params);
     else if (funcName == "getIdentifierForFrame")
         response = getIdentifierForFrame(params);
+    else if (funcName == "getActivityId")
+        response = getActivityId(params);
 
     return response;
 }
@@ -207,6 +209,11 @@ QString PalmSystemExtension::getIdentifierForFrame(const QJsonArray &params)
     QString url(params.at(1).toString());
 
     return mApplicationWindow->getIdentifierForFrame(id, url);
+}
+
+QString PalmSystemExtension::getActivityId(const QJsonArray& params)
+{
+    return QString("%1").arg(mApplicationWindow->application()->activityId());
 }
 
 } // namespace luna

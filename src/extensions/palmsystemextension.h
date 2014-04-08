@@ -115,6 +115,7 @@ private:
 
     QString getResource(const QJsonArray& params);
     QString getIdentifierForFrame(const QJsonArray& params);
+    QString getActivityId(const QJsonArray& params);
 };
 
 } // namespace luna

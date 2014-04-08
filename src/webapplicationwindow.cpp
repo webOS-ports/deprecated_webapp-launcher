@@ -173,6 +173,8 @@ void WebApplicationWindow::notifyAppAboutFocusState(bool focus)
     qDebug() << "DEBUG: We become" << (focus ? "focused" : "unfocused");
     QString action = focus ? "stageActivated" : "stageDeactivated";
     executeScript(QString("if (window.Mojo && Mojo.%1) Mojo.%1()").arg(action));
+
+    mApplication->changeActivityFocus(focus);
 }
 
 void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)

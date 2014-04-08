@@ -25,6 +25,7 @@
 #endif
 
 #include "applicationdescription.h"
+#include "activity.h"
 
 namespace luna
 {
@@ -74,8 +75,6 @@ public:
 
     WebApplicationPlugin* plugin() const;
 
-    void setActivityId(int activityId);
-
     void changeActivityFocus(bool focus);
 
     static void relaunch_cb(const char *parameters, void *user_data);
@@ -98,13 +97,13 @@ private:
     ApplicationDescription mDescription;
     QString mProcessId;
     QString mIdentifier;
-    int mActivityId;
     QString mParameters;
     WebApplicationWindow *mMainWindow;
     QList<WebApplicationWindow*> mChildWindows;
     bool mLaunchedAtBoot;
     bool mPrivileged;
     WebApplicationPlugin* mPlugin;
+    Activity mActivity;
 
     void loadPlugin();
 };

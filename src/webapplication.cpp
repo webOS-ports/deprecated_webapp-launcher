@@ -60,12 +60,12 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     mDescription(desc),
     mProcessId(processId),
     mIdentifier(mDescription.id() + " " + mProcessId),
-    mActivityId(-1),
     mParameters(parameters),
     mMainWindow(0),
     mLaunchedAtBoot(false),
     mPrivileged(false),
-    mPlugin(0)
+    mPlugin(0),
+    mActivity(mIdentifier, desc.id(), processId)
 {
     webos_application_init(desc.id().toUtf8().constData(), &event_handlers, this);
     webos_application_attach(g_main_loop_new(g_main_context_default(), TRUE));
@@ -114,15 +114,12 @@ void WebApplication::loadPlugin()
     qDebug() << "Plugin" << mDescription.pluginName() << "successfully loaded";
 }
 
-void WebApplication::setActivityId(int activityId)
-{
-    mActivityId = activityId;
-}
-
 void WebApplication::changeActivityFocus(bool focus)
 {
-    if (mActivityId < 0)
-        return;
+    if (focus)
+        mActivity.focus();
+    else
+        mActivity.unfocus();
 }
 
 void WebApplication::relaunch(const QString &parameters)
@@ -227,11 +224,6 @@ QString WebApplication::identifier() const
     return mIdentifier;
 }
 
-int WebApplication::activityId() const
-{
-    return mActivityId;
-}
-
 QString WebApplication::parameters() const
 {
     return mParameters;
@@ -280,6 +272,11 @@ bool WebApplication::hasRemoteEntryPoint() const
 QString WebApplication::userAgent() const
 {
     return mDescription.userAgent();
+}
+
+int WebApplication::activityId() const
+{
+    return mActivity.id();
 }
 
 } // namespace luna
