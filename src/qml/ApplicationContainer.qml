@@ -70,7 +70,7 @@ Flickable {
 
             var positiveSpace = {
                 width: parent.width,
-                height: parent.height - Qt.inputMethod.keyboardRectangle.height
+                height: parent.height - (Qt.inputMethod ? Qt.inputMethod.keyboardRectangle.height : 0)
             };
 
             webView.experimental.evaluateJavaScript("if (window.Mojo && window.Mojo.positiveSpaceChanged) {" +
