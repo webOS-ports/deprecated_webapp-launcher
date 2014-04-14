@@ -133,6 +133,7 @@ void WebApplicationWindow::createAndSetup()
 #ifndef WITH_UNMODIFIED_QTWEBKIT
     connect(mWebView->experimental(), SIGNAL(createNewPage(QWebNewPageRequest*)),
             this, SLOT(onCreateNewPage(QWebNewPageRequest*)));
+    connect(mWebView->experimental(), SIGNAL(closePage()), this, SLOT(onClosePage()));
     connect(mWebView->experimental(), SIGNAL(syncMessageReceived(const QVariantMap&, QString&)),
             this, SLOT(onSyncMessageReceived(const QVariantMap&, QString&)));
 #endif
@@ -209,6 +210,12 @@ void WebApplicationWindow::onLoadingChanged(QWebLoadRequest *request)
 void WebApplicationWindow::onCreateNewPage(QWebNewPageRequest *request)
 {
     mApplication->createWindow(request);
+}
+
+void WebApplicationWindow::onClosePage()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    mWindow->close();
 }
 
 void WebApplicationWindow::onSyncMessageReceived(const QVariantMap& message, QString& response)

@@ -85,6 +85,7 @@ protected:
 private slots:
 #ifndef WITH_UNMODIFIED_QTWEBKIT
     void onCreateNewPage(QWebNewPageRequest *request);
+    void onClosePage();
     void onSyncMessageReceived(const QVariantMap& message, QString& response);
 #endif
     void onClosed();
