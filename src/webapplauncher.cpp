@@ -46,6 +46,7 @@ WebAppLauncher::WebAppLauncher(int &argc, char **argv)
     mAllowedHeadlessApps << "com.palm.app.calendar";
     mAllowedHeadlessApps << "com.palm.app.clock";
     mAllowedHeadlessApps << "org.webosinternals.tweaks";
+    mAllowedHeadlessApps << "org.webosports.app.calendar";
 }
 
 WebAppLauncher::~WebAppLauncher()
