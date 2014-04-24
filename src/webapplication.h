@@ -77,6 +77,8 @@ public:
 
     void changeActivityFocus(bool focus);
 
+    bool validateResourcePath(const QString& path);
+
     static void relaunch_cb(const char *parameters, void *user_data);
     void relaunch(const QString &parameters);
 

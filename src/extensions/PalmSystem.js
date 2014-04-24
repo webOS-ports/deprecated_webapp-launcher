@@ -333,7 +333,10 @@ PalmSystem.keyboardHide = function() {
 }
 
 PalmSystem.getResource = function(a, b) {
-    return _webOS.execSync("PalmSystem", "getResource", [a, b]);
+    var result = _webOS.execSync("PalmSystem", "getResource", [a, b]);
+    if (b === "const json")
+        return JSON.parse(result);
+    return result;
 }
 
 function palmGetResource(a, b) {

@@ -387,6 +387,7 @@ void WebApplicationWindow::registerUserScript(const QUrl &path)
     mUserScripts.append(path);
 }
 
+
 WebApplication* WebApplicationWindow::application() const
 {
     return mApplication;

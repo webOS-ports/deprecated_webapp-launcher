@@ -52,6 +52,75 @@ struct webos_application_event_handlers event_handlers = {
     .lowmemory = NULL
 };
 
+class ResourcePathValidator
+{
+public:
+    static ResourcePathValidator& instance()
+    {
+        static ResourcePathValidator instance;
+        return instance;
+    }
+
+    bool validate(const QString &path, bool privileged)
+    {
+        if (findPathInList(mAllowedTargetPaths, path))
+            return true;
+        if (privileged && findPathInList(mPrivilegedAppPaths, path))
+            return true;
+        if (!privileged && findPathInList(mUnprivilegedAppPaths, path))
+            return true;
+
+        return false;
+    }
+
+private:
+    ResourcePathValidator()
+    {
+        // NOTE: below set of paths are taken from the configuration set in the webkit used in
+        // webOS 3.0.5. See http://downloads.help.palm.com/opensource/3.0.5/webcore-patch.gz
+
+        // paths allowed for every app
+        mAllowedTargetPaths << "/usr/palm/frameworks";
+        mAllowedTargetPaths << "/media/internal";
+        mAllowedTargetPaths << "/usr/lib/luna/luna-media";
+        mAllowedTargetPaths << "/var/luna/files";
+        mAllowedTargetPaths << "/var/luna/data/extractfs";
+        mAllowedTargetPaths << "/var/luna/data/im-avatars";
+        mAllowedTargetPaths <<  "/usr/palm/applications/com.palm.app.contacts/sharedWidgets/";
+        mAllowedTargetPaths << "/usr/palm/sysmgr/";
+        mAllowedTargetPaths << "/usr/palm/public";
+        mAllowedTargetPaths << "/var/file-cache/";
+        mAllowedTargetPaths << "/usr/lib/luna/system/luna-systemui/images/";
+        mAllowedTargetPaths << "/usr/lib/luna/system/luna-systemui/app/FilePicker";
+
+        // paths only allowed for privileged apps
+        mPrivilegedAppPaths << "/usr/lib/luna/system/";   // system ui apps
+        mPrivilegedAppPaths << "/usr/palm/applications/";  // Palm apps
+        mPrivilegedAppPaths << "/var/usr/palm/applications/com.palm.";  // privileged apps like facebook
+        mPrivilegedAppPaths << "/media/cryptofs/apps/usr/palm/applications/com.palm.";  // privileged 3rd party apps
+        mPrivilegedAppPaths << "/usr/palm/sysmgr/";
+        mPrivilegedAppPaths << "/var/usr/palm/applications/com/palm/";
+        mPrivilegedAppPaths << "/media/cryptofs/apps/usr/palm/applications/com/palm/";
+
+        // additional paths allowed for unprivileged apps
+        mUnprivilegedAppPaths << "/var/usr/palm/applications/";
+        mUnprivilegedAppPaths << "/media/cryptofs/apps/usr/palm/applications/";
+    }
+
+    bool findPathInList(const QStringList &list, const QString &path)
+    {
+        Q_FOREACH(QString item, list) {
+            if (path.startsWith(item))
+                return true;
+        }
+        return false;
+    }
+
+    QStringList mAllowedTargetPaths;
+    QStringList mPrivilegedAppPaths;
+    QStringList mUnprivilegedAppPaths;
+};
+
 WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
                                const ApplicationDescription& desc, const QString& parameters,
                                const QString& processId, QObject *parent) :
@@ -75,7 +144,9 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
     // Only system applications with a specific id prefix are privileged to access
     // the private luna bus
     if (mDescription.trustScope() == ApplicationDescription::TrustScopeSystem &&
-        (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm")))
+        (mDescription.id().startsWith("org.webosports") ||
+         mDescription.id().startsWith("com.palm")) ||
+         mDescription.id().startsWith("org.webosinternals"))
         mPrivileged = true;
 
     mMainWindow = new WebApplicationWindow(this, url, windowType, mDescription.headless());
@@ -197,6 +268,11 @@ void WebApplication::windowClosed()
 
         emit closed();
     }
+}
+
+bool WebApplication::validateResourcePath(const QString &path)
+{
+    return ResourcePathValidator::instance().validate(path, mPrivileged);
 }
 
 QString WebApplication::id() const

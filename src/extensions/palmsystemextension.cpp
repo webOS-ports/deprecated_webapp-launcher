@@ -189,13 +189,22 @@ QString PalmSystemExtension::getResource(const QJsonArray& params)
     if (params.count() != 2 || !params.at(0).isString())
         return QString("");
 
-    QFile file(params.at(0).toString());
+    QString path = params.at(0).toString();
+    if (path.startsWith("file://"))
+        path = path.right(path.size() - 7);
+
+    if (!mApplicationWindow->application()->validateResourcePath(path)) {
+        qDebug() << "WARNING: Access to path" << path << "is not allowed";
+        return QString("");
+    }
+
+    QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
         return QString("");
 
     QByteArray data = file.readAll();
 
-    return QString(data);
+    return data;
 }
 
 QString PalmSystemExtension::getIdentifierForFrame(const QJsonArray &params)
