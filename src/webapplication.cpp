@@ -207,12 +207,6 @@ void WebApplication::relaunch(const QString &parameters)
 
 void WebApplication::createWindow(QWebNewPageRequest *request)
 {
-    if (!mDescription.headless()) {
-        qDebug() << __PRETTY_FUNCTION__ << "We're not running in headless mode so refusing to open a new window";
-        request->setWebView(NULL);
-        return;
-    }
-
     qDebug() << __PRETTY_FUNCTION__ << "creating new window for url" << request->url();
 
     // child windows can never be headless ones!
