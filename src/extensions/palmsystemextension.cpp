@@ -99,6 +99,18 @@ void PalmSystemExtension::enableFullScreenMode(bool enable)
 
 void PalmSystemExtension::removeBannerMessage(int id)
 {
+    qDebug() << __PRETTY_FUNCTION__;
+
+    QString appId = mApplicationWindow->application()->id();
+
+    QJsonObject params;
+    params.insert("id", id);
+
+    QJsonDocument document(params);
+
+    LS::Call call = mLunaPubHandle.callOneReply("luna://org.webosports.notifications/closeNotification",
+                                                document.toJson().constData(),
+                                                appId.toUtf8().constData());
 }
 
 void PalmSystemExtension::clearBannerMessages()
