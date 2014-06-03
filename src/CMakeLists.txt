@@ -3,6 +3,7 @@ include_directories(
     ${Qt5Quick_PRIVATE_INCLUDE_DIRS}
     ${GLIB2_INCLUDE_DIRS}
     ${LS2_INCLUDE_DIRS}
+#    ${LS2CXX_INCLUDE_DIRS}
     ${PBNJSON_C_INCLUDE_DIRS}
     ${LUNA_SYSMGR_COMMON_INCLUDE_DIRS}
     ${WEBOS_APPLICATION_INCLUDE_DIRS}
@@ -44,6 +45,8 @@ qt5_use_modules(webapp-launcher Quick Gui WebKit)
 target_link_libraries(webapp-launcher
     webapp-plugin
     ${LS2_LIBRARIES}
+#    ${LS2CXX_LIBRARIES}
+    -lluna-service2++
     ${GLIB2_LIBRARIES}
     ${SYSTEMD_DAEMON_LIBRARIES}
     ${PBNJSON_C_LIBRARIES}

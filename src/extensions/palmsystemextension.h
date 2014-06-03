@@ -19,6 +19,7 @@
 #define PALMSYSTEMPLUGIN_H
 
 #include <baseextension.h>
+#include <luna-service2++/service.hpp>
 
 namespace luna
 {
@@ -43,9 +44,6 @@ public slots:
     void hide();
     void setWindowProperties(const QString &properties);
     void enableFullScreenMode(bool enable);
-    void addBannerMessage(int id, const QString &msg, const QString &params,
-                          const QString &icon, const QString &soundClass, const QString &soundFile, int duration,
-                          bool doNotSuppress);
     void removeBannerMessage(int id);
     void clearBannerMessages();
     void keepAlive(bool keep);
@@ -116,6 +114,9 @@ private:
     QString getResource(const QJsonArray& params);
     QString getIdentifierForFrame(const QJsonArray& params);
     QString getActivityId(const QJsonArray& params);
+    QString addBannerMessage(const QJsonArray& params);
+
+    LS::Service mLunaPubHandle;
 };
 
 } // namespace luna

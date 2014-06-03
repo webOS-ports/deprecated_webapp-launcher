@@ -22,6 +22,9 @@
 #include <QFile>
 #include <QUrl>
 
+#include <luna-service2++/message.hpp>
+#include <luna-service2++/call.hpp>
+
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
 #include "palmsystemextension.h"
@@ -32,11 +35,14 @@ namespace luna
 PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow, QObject *parent) :
     BaseExtension("PalmSystem", applicationWindow, parent),
     mPropertyChangeHandlerCallbackId(0),
-    mApplicationWindow(applicationWindow)
+    mApplicationWindow(applicationWindow),
+    mLunaPubHandle(NULL, true)
 {
     applicationWindow->registerUserScript(QUrl("qrc:///extensions/PalmSystem.js"));
 
     connect(applicationWindow->application(), SIGNAL(parametersChanged()), this, SLOT(onParametersChanged()));
+
+    mLunaPubHandle.attachToLoop(g_main_context_default());
 }
 
 void PalmSystemExtension::onParametersChanged()
@@ -89,12 +95,6 @@ void PalmSystemExtension::setWindowProperties(const QString &properties)
 void PalmSystemExtension::enableFullScreenMode(bool enable)
 {
     qDebug() << __PRETTY_FUNCTION__ << enable;
-}
-
-void PalmSystemExtension::addBannerMessage(int id, const QString &msg,
-                                        const QString &params, const QString &icon, const QString &soundClass,
-                                        const QString &soundFile, int duration, bool doNotSuppress)
-{
 }
 
 void PalmSystemExtension::removeBannerMessage(int id)
@@ -178,6 +178,8 @@ QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, cons
         response = getIdentifierForFrame(params);
     else if (funcName == "getActivityId")
         response = getActivityId(params);
+    else if (funcName == "addBannerMessage")
+        response = addBannerMessage(params);
 
     return response;
 }
@@ -224,5 +226,43 @@ QString PalmSystemExtension::getActivityId(const QJsonArray& params)
 {
     return QString("%1").arg(mApplicationWindow->application()->activityId());
 }
+
+QString PalmSystemExtension::addBannerMessage(const QJsonArray &params)
+{
+    qDebug() << __PRETTY_FUNCTION__ << params;
+
+    if (params.count() != 7)
+        return QString("");
+
+    QString appId = mApplicationWindow->application()->id();
+
+    QJsonObject notificationParams;
+    notificationParams.insert("summary", params.at(0).toString());
+    notificationParams.insert("appName", appId);
+    notificationParams.insert("appIcon", params.at(2).toString());
+    notificationParams.insert("expireTimeout", params.at(5).toInt());
+
+    QJsonObject hints;
+    hints.insert("params", params.at(1).toString());
+    hints.insert("sound-class", params.at(3).toString());
+    hints.insert("sound-file", params.at(4).toString());
+
+    notificationParams.insert("hints", hints);
+
+    QJsonDocument document(notificationParams);
+
+    LS::Call call = mLunaPubHandle.callOneReply("luna://org.webosports.luna/createNotification",
+                                                document.toJson().constData(),
+                                                appId.toUtf8().constData());
+    LS::Message message(&mLunaPubHandle, call.get());
+
+    QJsonObject response = QJsonDocument::fromJson(message.getPayload()).object();
+
+    if (!response.contains("id"))
+        return QString("");
+
+    return QString("%1").arg(response.value("id").toInt());
+}
+
 
 } // namespace luna
