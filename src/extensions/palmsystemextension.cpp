@@ -251,7 +251,7 @@ QString PalmSystemExtension::addBannerMessage(const QJsonArray &params)
 
     QJsonDocument document(notificationParams);
 
-    LS::Call call = mLunaPubHandle.callOneReply("luna://org.webosports.luna/createNotification",
+    LS::Call call = mLunaPubHandle.callOneReply("luna://org.webosports.notifications/createNotification",
                                                 document.toJson().constData(),
                                                 appId.toUtf8().constData());
     LS::Message message(&mLunaPubHandle, call.get());
