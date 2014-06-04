@@ -31,6 +31,7 @@ static gchar *option_appinfo = NULL;
 static gchar *option_parameters = NULL;
 static gboolean option_debug = FALSE;
 static gboolean option_version = FALSE;
+static gboolean option_verbose = FALSE;
 
 static GOptionEntry options[] = {
     { "appinfo", 'a', 0, G_OPTION_ARG_STRING, &option_appinfo,
@@ -40,6 +41,7 @@ static GOptionEntry options[] = {
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &option_debug,
         "Enable debugging modus. This will start the webkit inspector "
         "on http://localhost:1122/" },
+    { "verbose", 0, 0, G_OPTION_ARG_NONE, &option_verbose, "Enable verbose logging" },
     { "version", 'v', 0, G_OPTION_ARG_NONE, &option_version,
         "Show version information and exit" },
     { NULL },
@@ -52,7 +54,8 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
     switch(type)
     {
     case QtDebugMsg:
-        fprintf(stdout, "DEBUG: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
+        if (option_verbose)
+            fprintf(stdout, "DEBUG: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
         break;
     case QtWarningMsg:
         fprintf(stdout, "WARNING: %s: %s\n", timeStr.toUtf8().constData(), msg.toUtf8().constData());
