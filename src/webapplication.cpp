@@ -241,7 +241,7 @@ void WebApplication::windowClosed()
         delete window;
 
         // if no child window is left close the main (headless) window too
-        if (mChildWindows.count() == 0 && !mLaunchedAtBoot) {
+        if (mChildWindows.count() == 0 && !mLaunchedAtBoot && headless()) {
             qDebug() << "All child windows of app" << id()
                      << "were closed so closing the main window too";
 
