@@ -351,4 +351,9 @@ int WebApplication::activityId() const
     return mActivity.id();
 }
 
+bool WebApplication::loadingAnimationDisabled() const
+{
+    return mDescription.loadingAnimationDisabled();
+}
+
 } // namespace luna

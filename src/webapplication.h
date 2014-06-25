@@ -51,6 +51,7 @@ class WebApplication : public QObject
     Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
     Q_PROPERTY(QStringList urlsAllowed READ urlsAllowed CONSTANT)
     Q_PROPERTY(QString userAgent READ userAgent CONSTANT)
+    Q_PROPERTY(bool loadingAnimationDisabled READ loadingAnimationDisabled CONSTANT)
 
 public:
     WebApplication(WebAppLauncher *launcher, const QUrl& url, const QString& windowType,
@@ -72,6 +73,7 @@ public:
     QStringList urlsAllowed() const;
     bool hasRemoteEntryPoint() const;
     QString userAgent() const;
+    bool loadingAnimationDisabled() const;
 
     WebApplicationPlugin* plugin() const;
 

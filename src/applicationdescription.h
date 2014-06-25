@@ -36,6 +36,7 @@ class ApplicationDescription : public QObject
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool flickable READ flickable CONSTANT)
     Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
+    Q_PROPERTY(bool loadingAnimationDisabled READ loadingAnimationDisabled CONSTANT)
     Q_ENUMS(TrustScope)
 
 public:
@@ -59,6 +60,7 @@ public:
     bool internetConnectivityRequired() const;
     QStringList urlsAllowed() const;
     QString userAgent() const;
+    bool loadingAnimationDisabled() const;
 
     QString pluginName() const;
     QString basePath() const;
@@ -78,6 +80,7 @@ private:
     bool mInternetConnectivityRequired;
     QStringList mUrlsAllowed;
     QString mUserAgent;
+    bool mLoadingAnimationDisabled;
 
     void initializeFromData(const QString &data);
     QUrl locateEntryPoint(const QString &entryPoint);

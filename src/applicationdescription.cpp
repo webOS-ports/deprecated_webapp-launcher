@@ -44,7 +44,8 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mFlickable(other.flickable()),
     mInternetConnectivityRequired(other.internetConnectivityRequired()),
     mUrlsAllowed(other.urlsAllowed()),
-    mUserAgent(other.userAgent())
+    mUserAgent(other.userAgent()),
+    mLoadingAnimationDisabled(other.loadingAnimationDisabled())
 {
 }
 
@@ -54,7 +55,8 @@ ApplicationDescription::ApplicationDescription(const QString &data, const QStrin
     mInternetConnectivityRequired(false),
     mApplicationBasePath(applicationBasePath),
     mTrustScope(ApplicationDescription::TrustScopeSystem),
-    mUserAgent("")
+    mUserAgent(""),
+    mLoadingAnimationDisabled(false)
 {
     initializeFromData(data);
 }
@@ -126,6 +128,9 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
     if (rootObject.contains("userAgent") && rootObject.value("userAgent").isString())
         mUserAgent = rootObject.value("userAgent").toString();
+
+    if (rootObject.contains("loadingAnimationDisabled") && rootObject.value("loadingAnimationDisabled").isBool())
+        mLoadingAnimationDisabled = rootObject.value("loadingAnimationDisabled").toBool();
 }
 
 QUrl ApplicationDescription::locateEntryPoint(const QString &entryPoint)
@@ -211,6 +216,11 @@ QStringList ApplicationDescription::urlsAllowed() const
 QString ApplicationDescription::userAgent() const
 {
     return mUserAgent;
+}
+
+bool ApplicationDescription::loadingAnimationDisabled() const
+{
+    return mLoadingAnimationDisabled;
 }
 
 }
