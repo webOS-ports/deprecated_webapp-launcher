@@ -207,10 +207,25 @@ void WebApplication::relaunch(const QString &parameters)
 
 void WebApplication::createWindow(QWebNewPageRequest *request)
 {
-    qDebug() << __PRETTY_FUNCTION__ << "creating new window for url" << request->url();
+    qDebug() << __PRETTY_FUNCTION__ << "Creating new window for url" << request->url();
+
+    QVariantMap windowFeatures = request->windowFeatures();
+    foreach(QString key, windowFeatures.keys()) {
+        qDebug() << "[" << key << "] = " << windowFeatures.value(key);
+    }
 
     // child windows can never be headless ones!
     QString windowType = "card";
+
+    // check if we got supplied with a different window type
+    if (windowFeatures.contains("attributes")) {
+        QString attributes = windowFeatures["attributes"].toString();
+        QJsonDocument document = QJsonDocument::fromJson(attributes.toUtf8());
+        QString windowTypeAttrib = document.object().value("window").toString();
+        if (windowTypeAttrib.length() > 0)
+            windowType = windowTypeAttrib;
+    }
+
     WebApplicationWindow *window = new WebApplicationWindow(this, request->url(), windowType, false);
 
     connect(window, SIGNAL(closed()), this, SLOT(windowClosed()));
