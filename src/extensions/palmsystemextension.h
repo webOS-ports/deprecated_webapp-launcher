@@ -19,7 +19,7 @@
 #define PALMSYSTEMPLUGIN_H
 
 #include <baseextension.h>
-#include <luna-service2++/service.hpp>
+#include <luna-service2++/handle.hpp>
 
 namespace luna
 {
@@ -116,7 +116,7 @@ private:
     QString getActivityId(const QJsonArray& params);
     QString addBannerMessage(const QJsonArray& params);
 
-    LS::Service mLunaPubHandle;
+    LS::Handle mLunaPubHandle;
 };
 
 } // namespace luna
