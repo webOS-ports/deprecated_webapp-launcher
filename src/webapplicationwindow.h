@@ -73,7 +73,7 @@ public:
 
     QString getIdentifierForFrame(const QString& id, const QString& url);
 
-signals:
+Q_SIGNALS:
     void javaScriptExecNeeded(const QString &script);
     void extensionWantsToBeAdded(const QString &name, QObject *object);
     void closed();
@@ -82,7 +82,7 @@ signals:
 protected:
     bool eventFilter(QObject *object, QEvent *event);
 
-private slots:
+private Q_SLOTS:
 #ifndef WITH_UNMODIFIED_QTWEBKIT
     void onCreateNewPage(QWebNewPageRequest *request);
     void onClosePage();

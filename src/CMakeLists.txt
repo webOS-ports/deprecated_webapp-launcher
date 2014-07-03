@@ -54,5 +54,6 @@ target_link_libraries(webapp-launcher
     ${WEBOS_APPLICATION_LIBRARIES}
     ${LUNA_SERVIVCE2_LIBRARIES})
 
+webos_add_compiler_flags(ALL -DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 webos_build_program(ADMIN)
 webos_build_system_bus_files()

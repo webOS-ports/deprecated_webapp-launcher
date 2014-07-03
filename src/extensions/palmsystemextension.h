@@ -34,7 +34,7 @@ public:
 
     QString handleSynchronousCall(const QString& funcName, const QJsonArray& params);
 
-public slots:
+public Q_SLOTS:
 
     void activate();
     void deactivate();
@@ -104,7 +104,7 @@ public slots:
     void getProperty(int successCallbackId, int errorCallbackId, const QString &name);
     void initializeProperties(int successCallbackId, int errorCallbackId);
 
-private slots:
+private Q_SLOTS:
     void onParametersChanged();
 
 private:

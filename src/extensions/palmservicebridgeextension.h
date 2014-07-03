@@ -44,7 +44,7 @@ public:
 
     int instanceId() const;
 
-signals:
+Q_SIGNALS:
     void callback(const QString &arguments);
 
 private:
@@ -61,13 +61,13 @@ class PalmServiceBridgeExtension : public BaseExtension
 public:
     explicit PalmServiceBridgeExtension(WebApplicationWindow *applicationWindow, QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     void createInstance(unsigned int instanceId);
     void releaseInstance(unsigned int instanceId);
     void call(unsigned int instanceId, const QString &uri, const QString &payload);
     void cancel(unsigned int instanceId);
 
-private slots:
+private Q_SLOTS:
     void callbackFromBridge(const QString &arguments);
 
 private:

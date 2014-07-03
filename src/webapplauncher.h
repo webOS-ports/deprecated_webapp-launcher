@@ -43,7 +43,7 @@ public:
 
     void launchApp(const QString &manifestPath, const QString &parameters);
 
-private slots:
+private Q_SLOTS:
     void onApplicationWindowClosed();
     void onAboutToQuit();
 

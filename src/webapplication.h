@@ -88,12 +88,12 @@ public:
     void createWindow(QWebNewPageRequest *request);
 #endif
 
-signals:
+Q_SIGNALS:
     void closed();
 
     void parametersChanged();
 
-public slots:
+public Q_SLOTS:
     void windowClosed();
 
 private:
