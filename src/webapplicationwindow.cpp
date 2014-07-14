@@ -43,7 +43,8 @@
 namespace luna
 {
 
-WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
+WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QUrl& url,
+                                           const QString& windowType, const QSize& size,
                                            bool headless, QObject *parent) :
     ApplicationEnvironment(parent),
     mApplication(application),
@@ -56,7 +57,8 @@ WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QU
     mKeepAlive(false),
     mStagePreparing(true),
     mStageReady(false),
-    mShowWindowTimer(this)
+    mShowWindowTimer(this),
+    mSize(size)
 {
     connect(&mShowWindowTimer, SIGNAL(timeout()), this, SLOT(onShowWindowTimeout()));
     mShowWindowTimer.setSingleShot(true);
@@ -421,6 +423,11 @@ QList<QUrl> WebApplicationWindow::userScripts() const
 bool WebApplicationWindow::ready() const
 {
     return mStageReady && !mStagePreparing;
+}
+
+QSize WebApplicationWindow::size() const
+{
+    return mSize;
 }
 
 } // namespace luna

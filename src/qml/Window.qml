@@ -23,8 +23,8 @@ import "."
 Window {
     id: root
 
-    width: Settings.displayWidth
-    height: Settings.displayHeight
+    width: webAppWindow.size.width
+    height: webAppWindow.size.height
 
     ApplicationContainer {
         id: appContainer

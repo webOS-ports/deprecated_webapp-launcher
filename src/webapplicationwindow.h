@@ -43,10 +43,11 @@ class WebApplicationWindow : public ApplicationEnvironment
     Q_PROPERTY(WebApplication *application READ application)
     Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
     Q_PROPERTY(bool ready READ ready NOTIFY readyChanged);
+    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged);
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
-                                  bool headless = false, QObject *parent = 0);
+                                  const QSize& size, bool headless = false, QObject *parent = 0);
     ~WebApplicationWindow();
 
     WebApplication *application() const;
@@ -63,6 +64,7 @@ public:
     bool headless() const;
     bool keepAlive() const;
     QQuickWebView *webView() const;
+    QSize size() const;
 
     QList<QUrl> userScripts() const;
 
@@ -78,6 +80,7 @@ Q_SIGNALS:
     void extensionWantsToBeAdded(const QString &name, QObject *object);
     void closed();
     void readyChanged();
+    void sizeChanged();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -107,6 +110,7 @@ private:
     bool mStageReady;
     QTimer mShowWindowTimer;
     QList<QUrl> mUserScripts;
+    QSize mSize;
 
     void createAndSetup();
     void initializeAllExtensions();

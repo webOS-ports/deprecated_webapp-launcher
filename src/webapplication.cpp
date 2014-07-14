@@ -149,7 +149,10 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
          mDescription.id().startsWith("org.webosinternals"))
         mPrivileged = true;
 
-    mMainWindow = new WebApplicationWindow(this, url, windowType, mDescription.headless());
+    mMainWindow = new WebApplicationWindow(this, url, windowType,
+            QSize(Settings::LunaSettings()->displayWidth, Settings::LunaSettings()->displayHeight),
+            mDescription.headless());
+
     connect(mMainWindow, SIGNAL(closed()), this, SLOT(windowClosed()));
 
     const std::set<std::string> appsToLaunchAtBoot = Settings::LunaSettings()->appsToLaunchAtBoot;
@@ -207,6 +210,9 @@ void WebApplication::relaunch(const QString &parameters)
 
 void WebApplication::createWindow(QWebNewPageRequest *request)
 {
+    int width = Settings::LunaSettings()->displayWidth;
+    int height = Settings::LunaSettings()->displayHeight;
+
     qDebug() << __PRETTY_FUNCTION__ << "Creating new window for url" << request->url();
 
     QVariantMap windowFeatures = request->windowFeatures();
@@ -226,7 +232,11 @@ void WebApplication::createWindow(QWebNewPageRequest *request)
             windowType = windowTypeAttrib;
     }
 
-    WebApplicationWindow *window = new WebApplicationWindow(this, request->url(), windowType, false);
+    if (windowFeatures.contains("height"))
+        height = windowFeatures["attributes"].toInt();
+
+    WebApplicationWindow *window = new WebApplicationWindow(this, request->url(),
+                                                            windowType, QSize(width, height), false);
 
     connect(window, SIGNAL(closed()), this, SLOT(windowClosed()));
 
