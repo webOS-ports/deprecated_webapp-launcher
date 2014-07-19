@@ -22,6 +22,8 @@
 
 #include <glib.h>
 
+#include <LocalePreferences.h>
+
 #include "webapplauncher.h"
 
 #define VERSION "0.1"
@@ -101,6 +103,8 @@ int main(int argc, char **argv)
         QString cacheDir = QString("%1/cache").arg(storagePath);
         setenv("XDG_CACHE_HOME", cacheDir.toUtf8().constData(), 1);
     }
+
+    LocalePreferences::instance();
 
     luna::WebAppLauncher webAppLauncher(argc, argv);
 

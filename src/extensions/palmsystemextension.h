@@ -61,14 +61,8 @@ public Q_SLOTS:
     QString decrypt(const QString& key, const QString& str);
     void shutdown();
     void enableFullScreenMode(bool enable);
-    void activate();
-    void deactivate();
-    void stagePreparing();
-    void stageReady();
     void setAlertSound(const QString& soundClass, const QString& soundFile = "");
     void receivePageUpDownInLandscape(bool enable);
-    void show();
-    void hide();
     void enableDockMode(bool enable);
     QString getLocalizedString(const QString& str);
     QString addNewContentIndicator();
@@ -99,16 +93,10 @@ public Q_SLOTS:
     QVariant getResource(QVariant a, QVariant b);
     */
 
-    void registerPropertyChangeHandler(int successCallbackId, int errorCallbackId);
     void setProperty(const QString &name, const QVariant &value);
-    void getProperty(int successCallbackId, int errorCallbackId, const QString &name);
-    void initializeProperties(int successCallbackId, int errorCallbackId);
-
-private Q_SLOTS:
-    void onParametersChanged();
+    QString getProperty(const QJsonArray &params);
 
 private:
-    int mPropertyChangeHandlerCallbackId;
     WebApplicationWindow *mApplicationWindow;
 
     QString getResource(const QJsonArray& params);

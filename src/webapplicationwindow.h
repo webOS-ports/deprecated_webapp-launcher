@@ -44,6 +44,7 @@ class WebApplicationWindow : public ApplicationEnvironment
     Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
     Q_PROPERTY(bool ready READ ready NOTIFY readyChanged);
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged);
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged);
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
@@ -65,6 +66,7 @@ public:
     bool keepAlive() const;
     QQuickWebView *webView() const;
     QSize size() const;
+    bool active() const;
 
     QList<QUrl> userScripts() const;
 
@@ -81,6 +83,7 @@ Q_SIGNALS:
     void closed();
     void readyChanged();
     void sizeChanged();
+    void activeChanged();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

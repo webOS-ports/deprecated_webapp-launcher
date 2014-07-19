@@ -21,9 +21,12 @@
 #include <QQuickView>
 #include <QFile>
 #include <QUrl>
+#include <QtWebKitVersion>
 
 #include <luna-service2++/message.hpp>
 #include <luna-service2++/call.hpp>
+
+#include <LocalePreferences.h>
 
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
@@ -35,21 +38,12 @@ namespace luna
 
 PalmSystemExtension::PalmSystemExtension(WebApplicationWindow *applicationWindow, QObject *parent) :
     BaseExtension("PalmSystem", applicationWindow, parent),
-    mPropertyChangeHandlerCallbackId(0),
     mApplicationWindow(applicationWindow),
     mLunaPubHandle(NULL, true)
 {
     applicationWindow->registerUserScript(QUrl("qrc:///extensions/PalmSystem.js"));
 
-    connect(applicationWindow->application(), SIGNAL(parametersChanged()), this, SLOT(onParametersChanged()));
-
     mLunaPubHandle.attachToLoop(g_main_context_default());
-}
-
-void PalmSystemExtension::onParametersChanged()
-{
-    mAppEnvironment->executeScript(QString("__PalmSystem.launchParams = '%1';")
-                                   .arg(mApplicationWindow->application()->parameters()));
 }
 
 void PalmSystemExtension::stageReady()
@@ -131,54 +125,61 @@ void PalmSystemExtension::markFirstUseDone()
     firstUseMarker.close();
 }
 
-void PalmSystemExtension::registerPropertyChangeHandler(int successCallbackId, int errorCallbackId)
-{
-    mPropertyChangeHandlerCallbackId = successCallbackId;
-}
-
 void PalmSystemExtension::setProperty(const QString &name, const QVariant &value)
 {
     qDebug() << __PRETTY_FUNCTION__ << name << value;
 }
 
-void PalmSystemExtension::getProperty(int successCallbackId, int errorCallbackId, const QString &name)
+QString PalmSystemExtension::getProperty(const QJsonArray &params)
 {
-    if (name == "launchParams") {
-        callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->parameters());
-    }
-    else if (name == "identifier") {
-        callbackWithoutRemove(successCallbackId, mApplicationWindow->application()->identifier());
-    }
-    else if (name == "activityId") {
-        callbackWithoutRemove(successCallbackId, QString("%1").arg(mApplicationWindow->application()->activityId()));
-    }
-}
+    qDebug() << __PRETTY_FUNCTION__ << params;
 
-void PalmSystemExtension::initializeProperties(int successCallbackId, int errorCallbackId)
-{
-    QJsonObject rootObj;
+    if (params.count() != 1 || !params.at(0).isString())
+        return QString("");
 
-    rootObj.insert("launchParams", QJsonValue(mApplicationWindow->application()->parameters()));
-    rootObj.insert("hasAlphaHole", QJsonValue(false));
-    rootObj.insert("locale", QJsonValue(QString("")));
-    rootObj.insert("localeRegion", QJsonValue(QString("")));
-    rootObj.insert("timeFormat", QJsonValue(QString("")));
-    rootObj.insert("timeZone", QJsonValue(QString("")));
-    rootObj.insert("isMinimal", QJsonValue(QString("")));
-    rootObj.insert("identifier", QJsonValue(mApplicationWindow->application()->identifier()));
-    rootObj.insert("version", QJsonValue(QString("")));
-    rootObj.insert("screenOrientation", QJsonValue(QString("")));
-    rootObj.insert("windowOrientation", QJsonValue(QString("")));
-    rootObj.insert("specifiedWindowOrientation", QJsonValue(QString("")));
-    rootObj.insert("videoOrientation", QJsonValue(QString("")));
-    rootObj.insert("deviceInfo", QJsonValue(DeviceInfo::instance()->jsonString()));
-    rootObj.insert("isActivated", QJsonValue(true));
-    rootObj.insert("activityId", QJsonValue(mApplicationWindow->application()->activityId()));
-    rootObj.insert("phoneRegion", QJsonValue(QString("")));
+    QString name = params.at(0).toString();
+    QString result = "";
 
-    QJsonDocument document(rootObj);
+    if (name == "launchParams")
+        result = mApplicationWindow->application()->parameters();
+    else if (name == "hasAlphaHole")
+        result = QString("false");
+    else if (name == "locale")
+        result = QString::fromStdString(LocalePreferences::instance()->locale());
+    else if (name == "localeRegion")
+        result = QString::fromStdString(LocalePreferences::instance()->localeRegion());
+    else if (name == "timeFormat")
+        result = QString::fromStdString(LocalePreferences::instance()->timeFormat());
+    // TODO: don't take time zone from preferences but from system time service which is
+    // the proper runtime information we need ...
+    else if (name == "timeZone")
+        result = LocalePreferences::instance()->timezone();
+    else if (name == "isMinimal")
+        result = QString("false");
+    else if (name == "identifier")
+        result = mApplicationWindow->application()->identifier();
+    else if (name == "screenOrientation")
+        result = QString("");
+    else if (name == "windowOrientation")
+        result = QString("");
+    else if (name == "specifiedWindowOrientation")
+        result = QString("");
+    else if (name == "videoOrientation")
+        result = QString("");
+    else if (name == "deviceInfo")
+        result = DeviceInfo::instance()->jsonString();
+    else if (name == "isActivated")
+        result = QString(mApplicationWindow->active() ? "true" : "false");
+    else if (name == "activityId")
+        result = QString("%1").arg(mApplicationWindow->application()->activityId());
+    else if (name == "phoneRegion")
+        result = QString::fromStdString(LocalePreferences::instance()->phoneRegion());
+    else if (name == "version")
+        result = QString(QTWEBKIT_VERSION_STR);
 
-    callback(successCallbackId, document.toJson());
+    qDebug() << __PRETTY_FUNCTION__ << "result" << result;
+
+    return result;
 }
 
 QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, const QJsonArray& params)
@@ -189,8 +190,8 @@ QString PalmSystemExtension::handleSynchronousCall(const QString& funcName, cons
         response = getResource(params);
     else if (funcName == "getIdentifierForFrame")
         response = getIdentifierForFrame(params);
-    else if (funcName == "getActivityId")
-        response = getActivityId(params);
+    else if (funcName == "getProperty")
+        response = getProperty(params);
     else if (funcName == "addBannerMessage")
         response = addBannerMessage(params);
 
@@ -233,11 +234,6 @@ QString PalmSystemExtension::getIdentifierForFrame(const QJsonArray &params)
     QString url(params.at(1).toString());
 
     return mApplicationWindow->getIdentifierForFrame(id, url);
-}
-
-QString PalmSystemExtension::getActivityId(const QJsonArray& params)
-{
-    return QString("%1").arg(mApplicationWindow->application()->activityId());
 }
 
 QString PalmSystemExtension::addBannerMessage(const QJsonArray &params)

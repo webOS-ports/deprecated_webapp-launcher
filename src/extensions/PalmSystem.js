@@ -2,140 +2,74 @@
 
 window.PalmSystem = {}
 
-/**
- * Application launch parameters as stringified json
- **/
-
-/* This is our internal reprensentation for all properties */
-__PalmSystem = {};
-__PalmSystem.launchParams = "{}";
-__PalmSystem.hasAlphaHole = false;
-__PalmSystem.locale = "en";
-__PalmSystem.localeRegion = "us";
-__PalmSystem.timeFormat = "HH12";
-__PalmSystem.timeZone = "Etc/UTC";
-__PalmSystem.isMinimal = false;
-__PalmSystem.identifier = "";
-__PalmSystem.version = "";
-__PalmSystem.screenOrientation = "";
-__PalmSystem.windowOrientation = "";
-__PalmSystem.specifiedWindowOrientation = "";
-__PalmSystem.videoOrientation = "";
-__PalmSystem.deviceInfo = "{\"modelName\":\"unknown\",\"platformVersion\":\"0.0.0\"}";
-__PalmSystem.isActivated = true;
-__PalmSystem.activityId = 0;
-__PalmSystem.phoneRegion = "";
-
-/* Some internal settings we need for the implementation */
-__PalmSystem.bannerMessageCounter = 0;
-
-/* Retrieve values for all properties on startup */
-_webOS.exec(function(properties) {
-        if (typeof properties === "undefined")
-            return;
-
-        __PalmSystem.launchParams = properties.launchParams;
-        __PalmSystem.hasAlphaHole = properties.hasAlphaHole;
-        __PalmSystem.locale = properties.locale;
-        __PalmSystem.localeRegion = properties.localeRegion;
-        __PalmSystem.timeFormat = properties.timeFormat;
-        __PalmSystem.timeZone = properties.timeZone;
-        __PalmSystem.isMinimal = properties.isMinimal;
-        __PalmSystem.identifier = properties.identifier;
-        __PalmSystem.version = properties.version;
-        __PalmSystem.screenOrientation = properties.screenOrientation;
-        __PalmSystem.windowOrientation = properties.windowOrientation;
-        __PalmSystem.specifiedWindowOrientation = properties.specifiedWindowOrientation;
-        __PalmSystem.videoOrientation = properties.videoOrientation;
-        __PalmSystem.deviceInfo = properties.deviceInfo;
-        __PalmSystem.isActivated = properties.isActivated;
-        __PalmSystem.activityId = properties.activityId;
-        __PalmSystem.phoneRegion = properties.phoneRegion;
-    },
-    unusedCallback, "PalmSystem", "initializeProperties");
-
-/* Register our property change event handler */
-_webOS.exec(function(name, value) {
-        if (!__PalmSystem.hasOwnProperty(name))
-            return;
-        __PalmSystem[name] = value;
-    },
-    unusedCallback, "PalmSystem", "registerPropertyChangeHandler");
-
-/* read-only */
-
 Object.defineProperty(window.PalmSystem, "launchParams", {
-  get: function() { return __PalmSystem.launchParams; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["launchParams"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "hasAlphaHole", {
-  get: function() { return __PalmSystem.hasAlphaHole; },
-  set: function(value) {
-      _webOS.exec(unusedCallback, unusedCallback, "PalmSystem", "setProperty", ["hasAlphaHole", value]);
-  }
+  get: function() { return JSON.parse(_webOS.execSync("PalmSystem", "getProperty", ["hasAlphaHole"])); },
+  set: function(value) { _webOS.exec(unusedCallback, unusedCallback, "PalmSystem", "setProperty", ["hasAlphaHole", value]); }
 });
 
 Object.defineProperty(window.PalmSystem, "locale", {
-  get: function() { return __PalmSystem.locale; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["locale"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "localeRegion", {
-  get: function() { return __PalmSystem.localeRegion; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["localeRegion"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "timeFormat", {
-  get: function() { return __PalmSystem.timeFormat; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["timeFormat"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "timeZone", {
-  get: function() { return __PalmSystem.timeZone; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["timeZone"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "isMinimal", {
-  get: function() { return __PalmSystem.isMinimal; }
+  get: function() { return JSON.parse(_webOS.execSync("PalmSystem", "getProperty", ["isMinimal"])); }
 });
 
 Object.defineProperty(window.PalmSystem, "identifier", {
-  get: function() { return __PalmSystem.identifier; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["identifier"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "version", {
-  get: function() { return __PalmSystem.version; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["version"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "screenOrientation", {
-  get: function() { return __PalmSystem.screenOrientation; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["screenOrientation"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "windowOrientation", {
-  get: function() { return __PalmSystem.windowOrientation; },
-  set: function(value) {
-      _webOS.exec(unusedCallback, unusedCallback, "PalmSystem", "setProperty", ["windowOrientation", value]);
-  }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["windowOrientation"]); },
+  set: function(value) { _webOS.exec(unusedCallback, unusedCallback, "PalmSystem", "setProperty", ["windowOrientation", value]); }
 });
 
 Object.defineProperty(window.PalmSystem, "specifiedWindowOrientation", {
-  get: function() { return __PalmSystem.specifiedWindowOrientation; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["specifiedWindowOrientation"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "videoOrientation", {
-  get: function() { return __PalmSystem.videoOrientation; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["videoOrientation"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "deviceInfo", {
-  get: function() { return __PalmSystem.deviceInfo; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["deviceInfo"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "isActivated", {
-  get: function() { return __PalmSystem.isActivated; }
+  get: function() { return JSON.parse(_webOS.execSync("PalmSystem", "getProperty", ["isActivated"])); }
 });
 
 Object.defineProperty(window.PalmSystem, "activityId", {
-  get: function() { return parseInt(_webOS.execSync("PalmSystem", "getActivityId")); }
+  get: function() { return parseInt(_webOS.execSync("PalmSystem", "getProperty", ["activityId"])); }
 });
 
 Object.defineProperty(window.PalmSystem, "phoneRegion", {
-  get: function() { return __PalmSystem.phoneRegion; }
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["phoneRegion"]); }
 });
 
 PalmSystem.getIdentifier = function() {

@@ -140,6 +140,10 @@ void WebApplicationWindow::createAndSetup()
             this, SLOT(onSyncMessageReceived(const QVariantMap&, QString&)));
 #endif
 
+    connect(mWindow, &QQuickWindow::activeChanged, [=]() {
+        emit activeChanged();
+    });
+
     initializeAllExtensions();
 }
 
@@ -428,6 +432,11 @@ bool WebApplicationWindow::ready() const
 QSize WebApplicationWindow::size() const
 {
     return mSize;
+}
+
+bool WebApplicationWindow::active() const
+{
+    return mWindow->isActive();
 }
 
 } // namespace luna
