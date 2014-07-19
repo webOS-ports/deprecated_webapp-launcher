@@ -28,6 +28,7 @@
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
 #include "palmsystemextension.h"
+#include "deviceinfo.h"
 
 namespace luna
 {
@@ -170,7 +171,7 @@ void PalmSystemExtension::initializeProperties(int successCallbackId, int errorC
     rootObj.insert("windowOrientation", QJsonValue(QString("")));
     rootObj.insert("specifiedWindowOrientation", QJsonValue(QString("")));
     rootObj.insert("videoOrientation", QJsonValue(QString("")));
-    rootObj.insert("deviceInfo", QJsonValue(QString("{\"modelName\":\"unknown\",\"platformVersion\":\"0.0.0\"}")));
+    rootObj.insert("deviceInfo", QJsonValue(DeviceInfo::instance()->jsonString()));
     rootObj.insert("isActivated", QJsonValue(true));
     rootObj.insert("activityId", QJsonValue(mApplicationWindow->application()->activityId()));
     rootObj.insert("phoneRegion", QJsonValue(QString("")));
