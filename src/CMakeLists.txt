@@ -19,6 +19,7 @@ set(SOURCES
     webapplicationwindow.cpp
     applicationdescription.cpp
     activity.cpp
+    systemtime.cpp
     extensions/lunaservicemgr.cpp
     extensions/palmservicebridgeextension.cpp
     extensions/palmsystemextension.cpp
@@ -32,6 +33,7 @@ set(HEADERS
     webapplicationwindow.h
     applicationdescription.h
     activity.h
+    systemtime.h
     extensions/lunaservicemgr.h
     extensions/palmservicebridgeextension.h
     extensions/palmsystemextension.h

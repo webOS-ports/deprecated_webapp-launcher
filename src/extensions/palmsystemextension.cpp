@@ -30,6 +30,7 @@
 
 #include "../webapplication.h"
 #include "../webapplicationwindow.h"
+#include "../systemtime.h"
 #include "palmsystemextension.h"
 #include "deviceinfo.h"
 
@@ -150,10 +151,8 @@ QString PalmSystemExtension::getProperty(const QJsonArray &params)
         result = QString::fromStdString(LocalePreferences::instance()->localeRegion());
     else if (name == "timeFormat")
         result = QString::fromStdString(LocalePreferences::instance()->timeFormat());
-    // TODO: don't take time zone from preferences but from system time service which is
-    // the proper runtime information we need ...
     else if (name == "timeZone")
-        result = LocalePreferences::instance()->timezone();
+        result = SystemTime::instance()->timezone();
     else if (name == "isMinimal")
         result = QString("false");
     else if (name == "identifier")

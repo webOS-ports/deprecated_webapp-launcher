@@ -25,6 +25,7 @@
 #include <LocalePreferences.h>
 
 #include "webapplauncher.h"
+#include "systemtime.h"
 
 #define VERSION "0.1"
 #define XDG_RUNTIME_DIR_DEFAULT "/tmp/luna-session"
@@ -104,8 +105,6 @@ int main(int argc, char **argv)
         setenv("XDG_CACHE_HOME", cacheDir.toUtf8().constData(), 1);
     }
 
-    LocalePreferences::instance();
-
     luna::WebAppLauncher webAppLauncher(argc, argv);
 
     context = g_option_context_new(NULL);
@@ -127,6 +126,7 @@ int main(int argc, char **argv)
         g_message("webapp-launcher %s", VERSION);
         goto cleanup;
     }
+
     if (option_debug)
         setenv("QTWEBKIT_INSPECTOR_SERVER", "1122", 0);
 
@@ -134,6 +134,10 @@ int main(int argc, char **argv)
         g_warning("No application manifest supplied");
         goto cleanup;
     }
+
+    LocalePreferences::instance();
+
+    luna::SystemTime::instance();
 
     webAppLauncher.launchApp(option_appinfo, option_parameters);
 
