@@ -1,6 +1,7 @@
 /* PalmSystem */
 
 window.PalmSystem = {}
+window.PalmSystem.locales = {}
 
 Object.defineProperty(window.PalmSystem, "launchParams", {
   get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["launchParams"]); }
@@ -19,12 +20,22 @@ Object.defineProperty(window.PalmSystem, "localeRegion", {
   get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["localeRegion"]); }
 });
 
+/* enyo-ilib requires PalmSystem.locales.UI on webOS */
+Object.defineProperty(window.PalmSystem.locales, "UI", {
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["locales.UI"]); }
+});
+
 Object.defineProperty(window.PalmSystem, "timeFormat", {
   get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["timeFormat"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "timeZone", {
   get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["timeZone"]); }
+});
+
+/* enyo-ilib requires PalmSystem.timezone on webOS */
+Object.defineProperty(window.PalmSystem, "timezone", {
+  get: function() { return _webOS.execSync("PalmSystem", "getProperty", ["timezone"]); }
 });
 
 Object.defineProperty(window.PalmSystem, "isMinimal", {

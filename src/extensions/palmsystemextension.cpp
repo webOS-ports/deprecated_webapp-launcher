@@ -145,13 +145,13 @@ QString PalmSystemExtension::getProperty(const QJsonArray &params)
         result = mApplicationWindow->application()->parameters();
     else if (name == "hasAlphaHole")
         result = QString("false");
-    else if (name == "locale")
+    else if (name == "locale" || name == "locales.UI")
         result = QString::fromStdString(LocalePreferences::instance()->locale());
     else if (name == "localeRegion")
         result = QString::fromStdString(LocalePreferences::instance()->localeRegion());
     else if (name == "timeFormat")
         result = QString::fromStdString(LocalePreferences::instance()->timeFormat());
-    else if (name == "timeZone")
+    else if (name == "timeZone" || name == "timezone")
         result = SystemTime::instance()->timezone();
     else if (name == "isMinimal")
         result = QString("false");
