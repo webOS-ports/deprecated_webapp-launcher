@@ -111,6 +111,12 @@ void PalmSystemExtension::removeBannerMessage(int id)
 
 void PalmSystemExtension::clearBannerMessages()
 {
+    qDebug() << __PRETTY_FUNCTION__;
+
+    QString appId = mApplicationWindow->application()->id();
+
+    LS::Call call = mLunaPubHandle.callOneReply("luna://org.webosports.notifications/closeAllNotifications",
+                                                "{}", appId.toUtf8().constData());
 }
 
 void PalmSystemExtension::keepAlive(bool keep)
