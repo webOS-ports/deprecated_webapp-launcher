@@ -143,10 +143,8 @@ WebApplication::WebApplication(WebAppLauncher *launcher, const QUrl& url, const 
 
     // Only system applications with a specific id prefix are privileged to access
     // the private luna bus
-    if (mDescription.trustScope() == ApplicationDescription::TrustScopeSystem &&
-        (mDescription.id().startsWith("org.webosports") ||
-         mDescription.id().startsWith("com.palm")) ||
-         mDescription.id().startsWith("org.webosinternals"))
+    if (mDescription.id().startsWith("org.webosports") || mDescription.id().startsWith("com.palm") ||
+        mDescription.id().startsWith("org.webosinternals"))
         mPrivileged = true;
 
     mMainWindow = new WebApplicationWindow(this, url, windowType,
@@ -332,18 +330,6 @@ bool WebApplication::headless() const
 bool WebApplication::privileged() const
 {
     return mPrivileged;
-}
-
-QString WebApplication::trustScope() const
-{
-    switch (mDescription.trustScope()) {
-    case ApplicationDescription::TrustScopeSystem:
-        return QString("system");
-    case ApplicationDescription::TrustScopeRemote:
-        return QString("remote");
-    }
-
-    return QString("unknown");
 }
 
 WebApplicationPlugin* WebApplication::plugin() const

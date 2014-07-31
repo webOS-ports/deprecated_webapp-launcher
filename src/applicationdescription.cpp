@@ -27,8 +27,7 @@ namespace luna
 {
 
 ApplicationDescription::ApplicationDescription() :
-    mHeadless(false),
-    mTrustScope(ApplicationDescription::TrustScopeSystem)
+    mHeadless(false)
 {
 }
 
@@ -38,7 +37,6 @@ ApplicationDescription::ApplicationDescription(const ApplicationDescription& oth
     mIcon(other.icon()),
     mEntryPoint(other.entryPoint()),
     mHeadless(other.headless()),
-    mTrustScope(other.trustScope()),
     mPluginName(other.pluginName()),
     mApplicationBasePath(other.basePath()),
     mFlickable(other.flickable()),
@@ -54,7 +52,6 @@ ApplicationDescription::ApplicationDescription(const QString &data, const QStrin
     mFlickable(false),
     mInternetConnectivityRequired(false),
     mApplicationBasePath(applicationBasePath),
-    mTrustScope(ApplicationDescription::TrustScopeSystem),
     mUserAgent(""),
     mLoadingAnimationDisabled(false)
 {
@@ -81,9 +78,6 @@ void ApplicationDescription::initializeFromData(const QString &data)
 
     if (rootObject.contains("main") && rootObject.value("main").isString())
         mEntryPoint = locateEntryPoint(rootObject.value("main").toString());
-
-    if (mEntryPoint.scheme() != "file")
-        mTrustScope = TrustScopeRemote;
 
     if (rootObject.contains("noWindow") && rootObject.value("noWindow").isBool())
         mHeadless = rootObject.value("noWindow").toBool();
@@ -181,11 +175,6 @@ QUrl ApplicationDescription::entryPoint() const
 bool ApplicationDescription::headless() const
 {
     return mHeadless;
-}
-
-ApplicationDescription::TrustScope ApplicationDescription::trustScope() const
-{
-    return mTrustScope;
 }
 
 QString ApplicationDescription::basePath() const

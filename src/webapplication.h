@@ -47,7 +47,6 @@ class WebApplication : public QObject
     Q_PROPERTY(QString parameters READ parameters NOTIFY parametersChanged)
     Q_PROPERTY(bool headless READ headless CONSTANT)
     Q_PROPERTY(bool privileged READ privileged CONSTANT)
-    Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
     Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
     Q_PROPERTY(QStringList urlsAllowed READ urlsAllowed CONSTANT)
     Q_PROPERTY(QString userAgent READ userAgent CONSTANT)
@@ -68,7 +67,6 @@ public:
     QString parameters() const;
     bool headless() const;
     bool privileged() const;
-    QString trustScope() const;
     bool internetConnectivityRequired() const;
     QStringList urlsAllowed() const;
     bool hasRemoteEntryPoint() const;

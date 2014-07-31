@@ -122,18 +122,11 @@ Flickable {
         experimental.preferences.serifFontFamily: "Times New Roman"
         experimental.preferences.cursiveFontFamily: "Prelude"
 
-        /**
-         * Generally we only want to apply a different user agent for remote applications. All
-         * applications with a local origin get their user agent assigned from within webkit
-         * and we don't have to change it here.
-         **/
         function getUserAgentForApp(url) {
-            if (webApp.trustScope === "remote") {
-                if (webApp.userAgent.length > 0)
-                    return webApp.userAgent;
-                else if (url && url.length > 0)
-                    return userAgent.getUAString(url);
-            }
+            /* if the app wants a specific user agent assign it instead of the default one */
+            if (webApp.userAgent.length > 0)
+                return webApp.userAgent;
+
             return userAgent.defaultUA;
         }
 
@@ -170,7 +163,7 @@ Flickable {
             // Only when we have a system application we enable the webOS API and the
             // PalmServiceBridge to avoid remote applications accessing unwanted system
             // internals
-            if (webApp.trustScope === "system") {
+            if (webAppWindow.trustScope === "system") {
                 if (experimental.hasOwnProperty('userScriptsInjectAtStart') &&
                     experimental.hasOwnProperty('userScriptsForAllFrames')) {
                     experimental.userScripts = webAppWindow.userScripts;

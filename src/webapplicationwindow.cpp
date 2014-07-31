@@ -63,12 +63,22 @@ WebApplicationWindow::WebApplicationWindow(WebApplication *application, const QU
     connect(&mShowWindowTimer, SIGNAL(timeout()), this, SLOT(onShowWindowTimeout()));
     mShowWindowTimer.setSingleShot(true);
 
+    assignCorrectTrustScope();
+
     createAndSetup();
 }
 
 WebApplicationWindow::~WebApplicationWindow()
 {
     delete mRootItem;
+}
+
+void WebApplicationWindow::assignCorrectTrustScope()
+{
+    if (mUrl.scheme() == "file")
+        mTrustScope = TrustScopeSystem;
+    else
+        mTrustScope = TrustScopeRemote;
 }
 
 void WebApplicationWindow::setWindowProperty(const QString &name, const QVariant &value)
@@ -79,9 +89,10 @@ void WebApplicationWindow::setWindowProperty(const QString &name, const QVariant
 
 void WebApplicationWindow::createAndSetup()
 {
-    mUserScripts.append(QUrl("qrc:///qml/webos-api.js"));
-
-    createDefaultExtensions();
+    if (mTrustScope == TrustScopeSystem) {
+        mUserScripts.append(QUrl("qrc:///qml/webos-api.js"));
+        createDefaultExtensions();
+    }
 
     mEngine.rootContext()->setContextProperty("webApp", mApplication);
     mEngine.rootContext()->setContextProperty("webAppWindow", this);
@@ -144,7 +155,12 @@ void WebApplicationWindow::createAndSetup()
         emit activeChanged();
     });
 
-    initializeAllExtensions();
+    if (mTrustScope == TrustScopeSystem)
+        initializeAllExtensions();
+
+    /* If we're running a remote site mark the window as fully loaded */
+    if (mTrustScope == TrustScopeRemote)
+        stageReady();
 }
 
 void WebApplicationWindow::onShowWindowTimeout()
@@ -178,8 +194,11 @@ void WebApplicationWindow::setupPage()
 void WebApplicationWindow::notifyAppAboutFocusState(bool focus)
 {
     qDebug() << "DEBUG: We become" << (focus ? "focused" : "unfocused");
+
     QString action = focus ? "stageActivated" : "stageDeactivated";
-    executeScript(QString("if (window.Mojo && Mojo.%1) Mojo.%1()").arg(action));
+
+    if (mTrustScope == TrustScopeSystem)
+        executeScript(QString("if (window.Mojo && Mojo.%1) Mojo.%1()").arg(action));
 
     mApplication->changeActivityFocus(focus);
 }
@@ -437,6 +456,14 @@ QSize WebApplicationWindow::size() const
 bool WebApplicationWindow::active() const
 {
     return mWindow->isActive();
+}
+
+QString WebApplicationWindow::trustScope() const
+{
+    if (mTrustScope == TrustScopeSystem)
+        return QString("system");
+
+    return QString("remote");
 }
 
 } // namespace luna

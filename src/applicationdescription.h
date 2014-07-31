@@ -37,7 +37,6 @@ class ApplicationDescription : public QObject
     Q_PROPERTY(bool flickable READ flickable CONSTANT)
     Q_PROPERTY(bool internetConnectivityRequired READ internetConnectivityRequired CONSTANT)
     Q_PROPERTY(bool loadingAnimationDisabled READ loadingAnimationDisabled CONSTANT)
-    Q_ENUMS(TrustScope)
 
 public:
     ApplicationDescription();
@@ -45,12 +44,6 @@ public:
     ApplicationDescription(const QString &data, const QString &manifestPath);
     virtual ~ApplicationDescription();
 
-    enum TrustScope {
-        TrustScopeSystem,
-        TrustScopeRemote
-    };
-
-    TrustScope trustScope() const;
     QString id() const;
     QString title() const;
     QUrl icon() const;
@@ -74,7 +67,6 @@ private:
     QUrl mEntryPoint;
     bool mHeadless;
     QString mApplicationBasePath;
-    TrustScope mTrustScope;
     QString mPluginName;
     bool mFlickable;
     bool mInternetConnectivityRequired;

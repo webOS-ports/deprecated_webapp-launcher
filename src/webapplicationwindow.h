@@ -37,14 +37,21 @@ namespace luna
 class BaseExtension;
 class WebApplication;
 
+enum TrustScope
+{
+    TrustScopeRemote = 0,
+    TrustScopeSystem,
+};
+
 class WebApplicationWindow : public ApplicationEnvironment
 {
     Q_OBJECT
     Q_PROPERTY(WebApplication *application READ application)
     Q_PROPERTY(QList<QUrl> userScripts READ userScripts)
-    Q_PROPERTY(bool ready READ ready NOTIFY readyChanged);
-    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged);
-    Q_PROPERTY(bool active READ active NOTIFY activeChanged);
+    Q_PROPERTY(bool ready READ ready NOTIFY readyChanged)
+    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged)
+    Q_PROPERTY(QString trustScope READ trustScope CONSTANT)
 
 public:
     explicit WebApplicationWindow(WebApplication *application, const QUrl& url, const QString& windowType,
@@ -67,6 +74,7 @@ public:
     QQuickWebView *webView() const;
     QSize size() const;
     bool active() const;
+    QString trustScope() const;
 
     QList<QUrl> userScripts() const;
 
@@ -114,7 +122,9 @@ private:
     QTimer mShowWindowTimer;
     QList<QUrl> mUserScripts;
     QSize mSize;
+    TrustScope mTrustScope;
 
+    void assignCorrectTrustScope();
     void createAndSetup();
     void initializeAllExtensions();
     void addExtension(BaseExtension *extension);
