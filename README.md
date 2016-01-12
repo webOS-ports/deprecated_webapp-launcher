@@ -1,5 +1,9 @@
+THIS COMPONENT IS NO LONGER USED
+===============
+
 webapp-launcher
 ===============
+
 
 Summary
 -------
